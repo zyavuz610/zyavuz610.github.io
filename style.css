@@ -35,3 +35,30 @@
 .leftside {
   float:left;
   width:30%;
+  min-height: 300px;
+  border:1px solid #817979;
+}
+
+.main{
+  float:left;
+  width:calc(70% - 4px);
+  min-height: 300px;
+  border:1px solid #817979;
+}
+
+.row:after { /*  clearfix */
+  content:"";
+  display:table;
+  clear:both;
+}
+
+.footer {
+  background-color:#605c5c;
+  color:#dad8d8;
+  min-height:70px;
+  text-align:center;
+}
+
+.active {
+  background-color:#e61919;
+}
