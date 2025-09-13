@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuelStation - Premium Benzin İstasyonu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #004274;
+            --accent-color: #F7931E;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0,66,116,0.8), rgba(255,107,53,0.8)), url('https://images.unsplash.com/photo-1545558014-8692077e9b5c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title {
+            color: var(--secondary-color);
+            font-weight: bold;
+            margin-bottom: 3rem;
+        }
+        
+        .price-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .price-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .contact-info i {
+            color: var(--accent-color);
+            margin-right: 10px;
+        }
+        
+        .gallery-img {
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .navbar-toggler {
+            border: none;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--secondary-color);">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <i class="fas fa-gas-pump me-2"></i>FuelStation
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Hizmetlerimiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#prices">Fiyatlar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">Hakkımızda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#gallery">Galeri</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">İletişim</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Premium Yakıt, Güvenilir Hizmet</h1>
+                    <p class="lead mb-4">24 saat açık, modern teknoloji ile donatılmış benzin istasyonumuzda kaliteli yakıt ve hızlı hizmet sunuyoruz.</p>
+                    <a href="#services" class="btn btn-primary btn-lg me-3">Hizmetlerimizi Keşfedin</a>
+                    <a href="#contact" class="btn btn-outline-light btn-lg">İletişime Geçin</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-title">Hizmetlerimiz</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center border-0 shadow">
+                        <div class="card-body p-4">
+                            <i class="fas fa-gas-pump service-icon"></i>
+                            <h5 class="card-title">Premium Yakıt</h5>
+                            <p class="card-text">Benzin, motorin ve LPG dahil olmak üzere tüm yakıt türlerinde premium kalite sunuyoruz.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center border-0 shadow">
+                        <div class="card-body p-4">
+                            <i class="fas fa-car-wash service-icon"></i>
+                            <h5 class="card-title">Araç Yıkama</h5>
+                            <p class="card-text">Modern ekipmanlarla otomatik ve manuel araç yıkama hizmetleri sunuyoruz.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center border-0 shadow">
+                        <div class="card-body p-4">
+                            <i class="fas fa-tools service-icon"></i>
+                            <h5 class="card-title">Bakım Onarım</h5>
+                            <p class="card-text">Tecrübeli ekibimizle araç bakım ve onarım hizmetleri sağlıyoruz.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center border-0 shadow">
+                        <div class="card-body p-4">
+                            <i class="fas fa-coffee service-icon"></i>
+                            <h5 class="card-title">Market & Cafe</h5>
+                            <p class="card-text">Geniş ürün yelpazesi bulunan marketimiz ve taze kahve sunan kafemiz.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center border-0 shadow">
+                        <div class="card-body p-4">
+                            <i class="fas fa-credit-card service-icon"></i>
+                            <h5 class="card-title">Kolay Ödeme</h5>
+                            <p class="card-text">Nakit, kredi kartı ve mobil ödeme seçenekleri ile kolay ödeme imkanı.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center border-0 shadow">
+                        <div class="card-body p-4">
+                            <i class="fas fa-clock service-icon"></i>
+                            <h5 class="card-title">7/24 Hizmet</h5>
+                            <p class="card-text">Haftanın her günü 24 saat açık olarak sizlere hizmet veriyoruz.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prices Section -->
+    <section id="prices" class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-title">Güncel Fiyatlar</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="price-card">
+                        <i class="fas fa-gas-pump mb-3" style="font-size: 2rem;"></i>
+                        <h5>Benzin 95</h5>
+                        <div class="price-number">₺29,85</div>
+                        <p class="mb-0">Litre</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="price-card">
+                        <i class="fas fa-gas-pump mb-3" style="font-size: 2rem;"></i>
+                        <h5>Motorin</h5>
+                        <div class="price-number">₺28,90</div>
+                        <p class="mb-0">Litre</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="price-card">
+                        <i class="fas fa-fire mb-3" style="font-size: 2rem;"></i>
+                        <h5>LPG</h5>
+                        <div class="price-number">₺15,75</div>
+                        <p class="mb-0">Litre</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <p class="text-muted"><small>*Fiyatlar günlük olarak güncellenmektedir.</small></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="section-title">Hakkımızda</h2>
+                    <p class="lead">25 yıllık tecrübemizle, modern teknoloji ve kaliteli hizmet anlayışını bir araya getiriyoruz.</p>
+                    <p>FuelStation olarak, müşterilerimize en kaliteli yakıt ve hızlı hizmet sunmayı hedefliyoruz. Çevre dostu yaklaşımımız ve sürekli yenilenen teknolojilerimizle sektörde öncü konumdayız.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check-circle text-success me-2"></i> ISO 9001 Kalite Sertifikası</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Çevre Dostu Teknolojiler</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Güvenli Ödeme Sistemi</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> 7/24 Müşteri Desteği</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" 
+                         alt="Modern Benzin İstasyonu" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-title">Galeri</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" 
+                         alt="Benzin Pompası" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1571043733612-d95700cf11a4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Araç Yıkama" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1544365845-1754be26508c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Market Bölümü" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1559756530-6f8dbc6b6daa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Gece Görünümü" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1592838064575-70ed626d3a0e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Cafe Bölümü" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Çevre Dostu Teknoloji" class="img-fluid gallery-img w-100">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-title">İletişim</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 shadow">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-4">İletişim Bilgileri</h5>
+                            <div class="contact-info">
+                                <p><i class="fas fa-map-marker-alt"></i> Atatürk Bulvarı No:123, Merkez/İSTANBUL</p>
+                                <p><i class="fas fa-phone"></i> +90 212 555 0123</p>
+                                <p><i class="fas fa-envelope"></i> info@fuelstation.com</p>
+                                <p><i class="fas fa-clock"></i> 24 Saat Açık</p>
+                            </div>
+                            <div class="mt-4">
+                                <h6>Sosyal Medya</h6>
+                                <a href="#" class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 shadow">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-4">Bize Mesaj Gönderin</h5>
+                            <form>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Ad Soyad</label>
+                                    <input type="text" class="form-control" id="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">E-posta</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Telefon</label>
+                                    <input type="tel" class="form-control" id="phone">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Mesaj</label>
+                                    <textarea class="form-control" id="message" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Mesaj Gönder</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <p class="mb-0">&copy; 2025 FuelStation. Tüm hakları saklıdır.</p>
+                </div>
+                <div class="col-lg-6 text-end">
+                    <p class="mb-0">Premium Yakıt, Güvenilir Hizmet</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.backgroundColor = 'rgba(0, 66, 116, 0.95)';
+            } else {
+                navbar.style.backgroundColor = 'var(--secondary-color)';
+            }
+        });
+
+        // Form submission handler
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Mesajınız alındı! En kısa sürede size dönüş yapacağız.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
