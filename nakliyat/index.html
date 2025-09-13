@@ -1,11 +1,556 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TransportPro - Güvenilir Nakliyat Hizmetleri</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2E5266;
+            --secondary-color: #6E8898;
+            --accent-color: #D2691E;
+            --success-color: #28a745;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(46,82,102,0.85), rgba(110,136,152,0.85)), url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .service-icon {
+            font-size: 3.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent-color);
+            margin: 15px auto 0;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            height: 100%;
+        }
+        
+        .stats-number {
+            font-size: 3rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .price-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            text-align: center;
+            border: 3px solid var(--secondary-color);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .price-card.featured {
+            border-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+        
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .price-number {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), #1a3d4d);
+            color: white;
+        }
+        
+        .contact-info i {
+            color: var(--accent-color);
+            margin-right: 15px;
+            width: 20px;
+        }
+        
+        .gallery-img {
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46,82,102,0.3);
+        }
+        
+        .btn-outline-light {
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-toggler {
+            border: none;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        
+        .testimonial-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem 0;
+        }
+        
+        .rating {
+            color: #ffc107;
+        }
+        
+        .about-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .about-feature i {
+            color: var(--success-color);
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stats-number {
+                font-size: 2.2rem;
+            }
+            
+            .price-card.featured {
+                transform: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    
-</body>
-</html>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background: rgba(46,82,102,0.95); backdrop-filter: blur(10px);">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <i class="fas fa-truck me-2"></i>TransportPro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Hizmetlerimiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#prices">Fiyatlar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">Hakkımızda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#gallery">Galeri</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#testimonials">Referanslar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">İletişim</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="display-3 fw-bold mb-4">Güvenilir Nakliyat Hizmetleri</h1>
+                    <p class="lead mb-4">Türkiye'nin her yerine hızlı, güvenli ve ekonomik nakliyat çözümleri sunuyoruz. 15 yıllık tecrübemizle eşyalarınız güvende.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#services" class="btn btn-primary btn-lg">Hizmetlerimizi Keşfedin</a>
+                        <a href="#contact" class="btn btn-outline-light btn-lg">Teklif Alın</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-5" style="background: #f8f9fa;">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card">
+                        <span class="stats-number">15+</span>
+                        <p class="mb-0">Yıllık Tecrübe</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card">
+                        <span class="stats-number">10K+</span>
+                        <p class="mb-0">Memnun Müşteri</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card">
+                        <span class="stats-number">81</span>
+                        <p class="mb-0">İl Kapsamı</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card">
+                        <span class="stats-number">24/7</span>
+                        <p class="mb-0">Müşteri Desteği</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="section-title">Hizmetlerimiz</h2>
+                    <p class="lead text-muted mb-5">Nakliyat ihtiyaçlarınız için kapsamlı çözümler sunuyoruz</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body p-4">
+                            <i class="fas fa-home service-icon"></i>
+                            <h5 class="card-title">Ev Taşıma</h5>
+                            <p class="card-text">Profesyonel ekibimizle ev eşyalarınızı güvenle yeni adresinize taşıyoruz. Paketleme, yükleme ve yerleştirme hizmeti dahil.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body p-4">
+                            <i class="fas fa-building service-icon"></i>
+                            <h5 class="card-title">Ofis Taşıma</h5>
+                            <p class="card-text">İş yerinizin kesintisiz taşınması için planlı ve hızlı ofis taşıma hizmeti. Hassas elektronik cihazlar için özel koruma.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body p-4">
+                            <i class="fas fa-shipping-fast service-icon"></i>
+                            <h5 class="card-title">Kargo & Kurye</h5>
+                            <p class="card-text">Hızlı ve güvenli kargo hizmetleri. Aynı gün teslimat seçeneği ile acil gönderi ihtiyaçlarınızı karşılıyoruz.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body p-4">
+                            <i class="fas fa-boxes service-icon"></i>
+                            <h5 class="card-title">Depolama</h5>
+                            <p class="card-text">Güvenli depo alanlarımızda eşyalarınızı kısa veya uzun vadeli saklama imkanı. Klima kontrollü depolar mevcut.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body p-4">
+                            <i class="fas fa-truck-loading service-icon"></i>
+                            <h5 class="card-title">Ağır Yük Taşıma</h5>
+                            <p class="card-text">Endüstriyel makineler, ağır eşyalar için özel araç filosu ve deneyimli personel ile güvenli taşıma hizmeti.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 text-center">
+                        <div class="card-body p-4">
+                            <i class="fas fa-globe service-icon"></i>
+                            <h5 class="card-title">Uluslararası Taşıma</h5>
+                            <p class="card-text">Avrupa'ya güvenli ve hızlı uluslararası nakliyat hizmetleri. Gümrük işlemleri dahil kapsamlı çözüm.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prices Section -->
+    <section id="prices" class="py-5" style="background: #f8f9fa;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="section-title">Hizmet Paketleri</h2>
+                    <p class="lead text-muted mb-5">İhtiyacınıza uygun paket seçeneklerimiz</p>
+                </div>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-4 col-md-6">
+                    <div class="price-card">
+                        <h5 class="mb-3">Temel Paket</h5>
+                        <div class="price-number mb-3">₺500</div>
+                        <p class="text-muted mb-4">Şehir içi ev taşıma</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Yükleme & Boşaltma</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Temel Koruma</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Sigorta (10.000₺)</li>
+                            <li class="mb-2"><i class="fas fa-times text-muted me-2"></i> Paketleme Hizmeti</li>
+                        </ul>
+                        <button class="btn btn-outline-primary w-100">Teklif Al</button>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="price-card featured">
+                        <div class="badge bg-warning text-dark position-absolute" style="top: -10px; right: 20px;">Popüler</div>
+                        <h5 class="mb-3">Standart Paket</h5>
+                        <div class="price-number mb-3">₺800</div>
+                        <p class="text-muted mb-4">Şehirler arası taşıma</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Yükleme & Boşaltma</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Premium Koruma</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Sigorta (25.000₺)</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Paketleme Hizmeti</li>
+                        </ul>
+                        <button class="btn btn-primary w-100">Teklif Al</button>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="price-card">
+                        <h5 class="mb-3">Premium Paket</h5>
+                        <div class="price-number mb-3">₺1.200</div>
+                        <p class="text-muted mb-4">Full servis taşıma</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Kapıdan Kapıya Hizmet</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Lüks Koruma</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Sigorta (50.000₺)</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Tüm Hizmetler Dahil</li>
+                        </ul>
+                        <button class="btn btn-outline-primary w-100">Teklif Al</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <p class="text-muted"><small>*Fiyatlar mesafe ve eşya miktarına göre değişkenlik gösterir. Detaylı fiyat teklifi için iletişime geçin.</small></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 class="section-title text-start">Hakkımızda</h2>
+                    <p class="lead">15 yıldır nakliyat sektöründe güvenilir hizmet sunuyoruz.</p>
+                    <p class="mb-4">TransportPro olarak, her türlü taşıma ihtiyacınız için profesyonel çözümler sunuyoruz. Deneyimli ekibimiz ve modern araç filoumuz ile eşyalarınızı güvenle teslim ediyoruz.</p>
+                    
+                    <div class="about-feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Tam kapsamlı sigorta koruması</span>
+                    </div>
+                    <div class="about-feature">
+                        <i class="fas fa-users"></i>
+                        <span>Deneyimli ve eğitimli personel</span>
+                    </div>
+                    <div class="about-feature">
+                        <i class="fas fa-truck"></i>
+                        <span>Modern ve güvenli araç filosu</span>
+                    </div>
+                    <div class="about-feature">
+                        <i class="fas fa-clock"></i>
+                        <span>Zamanında teslimat garantisi</span>
+                    </div>
+                    <div class="about-feature">
+                        <i class="fas fa-headset"></i>
+                        <span>7/24 müşteri desteği</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1618846153388-2d605073637f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Nakliyat Ekibi" class="img-fluid rounded-3 shadow-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-5" style="background: #f8f9fa;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="section-title">Galeri</h2>
+                    <p class="lead text-muted mb-5">Çalışmalarımızdan kareler</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Nakliyat Kamyonu" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Eşya Paketleme" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1607656116462-a2dc6e59f1c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2128&q=80" 
+                         alt="Depo Alanı" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Yükleme İşlemi" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2062&q=80" 
+                         alt="Lojistik Merkezi" class="img-fluid gallery-img w-100">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                         alt="Araç Filosu" class="img-fluid gallery-img w-100">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="section-title">Müşteri Yorumları</h2>
+                    <p class="lead text-muted mb-5">Memnun müşterilerimizin deneyimleri</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="testimonial-card">
+                        <div class="rating mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="mb-3">"Ev taşıma işimi çok profesyonel bir şekilde hallettiler. Hiçbir eşyam zarar görmedi ve zamanında teslim ettiler."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <strong>AS</strong>
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">Ayşe Solmaz</h6>
+                                <small class="text-muted">İstanbul</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="testimonial-card">
+                        <div class="rating mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="mb-3">"Ofis taşıma hizmetleri için TransportPro'yu tercih ettik. İş yerimiz hiç aksatmadı, çok memnun kaldık."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                <strong>MK</strong>
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="mb-0">Mehmet Kaya</h6>
+                                <small class="text-muted">Ankara</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="testimonial-card">
+                        <div class="rating mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="mb-3">"Uluslararası taşıma hizmetlerinde çok başarılılar. Almanya'ya eşyalarımı güvenle teslim ettiler."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-warning text-dark d-flex align-
