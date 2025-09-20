@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marmara Teknokent Firma Listesi</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #3498db, #2c3e50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        .stats {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(116, 185, 255, 0.3);
+        }
+        .export-btn {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 184, 148, 0.3);
+        }
+        .export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 184, 148, 0.4);
+        }
+        .export-btn:active {
+            transform: translateY(0);
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        th {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: top;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background: linear-gradient(135deg, rgba(116, 185, 255, 0.1), rgba(108, 92, 231, 0.1));
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+        .website-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .website-link:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        .row-number {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            table {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Marmara Teknokent Firma Listesi</h1>
+        <p class="subtitle">Teknoloji Geliştirme Bölgesi'ndeki Tüm Firmalar</p>
+        
+        <div class="stats">
+            🏢 Toplam Firma Sayısı: <span id="firmaCount">183</span>
+        </div>
+        
+        <button class="export-btn" onclick="exportToExcel()">
+            📥 Excel Dosyası İndir
+        </button>
+        
+        <div class="table-container">
+            <table id="firmaTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>İsim</th>
+                        <th>Adres</th>
+                        <th>Web Sitesi Linki</th>
+                    </tr>
+                </thead>
+                <tbody id="firmaTableBody">
+                    <!-- Firmalar JavaScript ile yüklenecek -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Firma verileri
+        const firmalar = [
+            {
+                isim: "32 BİT BİLGİSAYAR HİZMETLERİ SANAYİ TİCARET VE LİMİTED ŞİRKETİ",
+                adres: "Bölge : TEKSEB — Ofis No : YTB A Blok Kat:2 207-208-209-210 — Telefon : (262) 646-50-11",
+                website: "http://www.32bit.com.tr"
+            },
+            {
+                isim: "3E ENDÜSTRİYEL MÜHENDİSLİK SAN. VE TİC. LTD. ŞTİ.",
+                adres: "Bölge : Ar-Ge ve İnovasyon Merkezi Ofis No: 26 2. Kat 51 numaralı ofis — Telefon : +90 543 233 40 26",
+                website: "http://www.3eendustriyel.com.tr"
+            },
+            {
+                isim: "5M BİLİŞİM YAZILIM ELEKTRONİK REKLAM SİNEMA GIDA EĞİTİM YÖNETİM DANIŞMANLIĞI SAN. VE TİC. LTD. ŞTİ.",
+                adres: "Bölge : TEKSEB — Ofis No : 30/1-1NOLU OFİS — Telefon : (262) 644-29-21",
+                website: "http://www.5m.com.tr"
+            },
+            {
+                isim: "ABES TURİZM TEKNOLOJİLERİ A.Ş.",
+                adres: "Bölge : KULUÇKA — Ofis No : K1.174 — Telefon : (531) 842-83-28",
+                website: "http://abesturizm.com"
+            },
+            {
+                isim: "Adbioink Biyosistem Teknoloji A.Ş",
+                adres: "Bölge : TEKGEB — Ofis No :30/10-2 NOLU OFİS — Telefon : (546) 229-09-19",
+                website: "http://www.adbioink.com"
+            },
+            {
+                isim: "AİDCODE TEKNOLOJİ DANIŞMANLIK ARAŞT. GELİŞTİRME BİLİŞİM HİZM. LTD. ŞTİ.",
+                adres: "KULUÇKA Ofis No: K1.195 Tel: 539 236 32 32",
+                website: "https://www.aidcode.co/"
+            },
+            {
+                isim: "AKRONEX International Yangın ve Mühendislik",
+                adres: "Ar-Ge ve İnovasyon Merkezi Ofis no. 111 0262 655 46 46",
+                website: "https://akronex.com"
+            },
+            {
+                isim: "Alcansar Ölçüm ve Otomasyon Sis. San. Tic. Ltd. Şti",
+                adres: "Bölge: TEKSEB Ofis No: NO:4 C BLOK Z06-10 Telefon: 0216 577 37 50 WhatsApp: 0537 322 67 98",
+                website: "https://www.alcansar.net/tr/"
+            },
+            {
+                isim: "ALTINELLER ROBOTİK VE YAZILIM A.Ş.",
+                adres: "Bölge : KULUÇKA— Ofis No :K1.165 — Telefon : (532) 779-43-83",
+                website: "http://www.altineller.org/"
+            },
+            {
+                isim: "ANALYTHİNX BİLİŞİM HİZMETLERİ T.A.Ş.",
+                adres: "Bölge : TEKGEB — Ofis No :30/9-1 NOLU OFİS — Telefon : (532) 734-08-88",
+                website: "https://www.analythinx.com/"
+            },
+            {
+                isim: "Andevos Bilgi Teknolojileri ve Pazarlama A.Ş",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: A Blok 2. Kat 49 numaralı ofis Telefon: (0212) 295 22 30",
+                website: "http://www.andevos.com.tr"
+            },
+            {
+                isim: "ANKA MİKROELEKTRONİK SİSTEMLER SANAYİ VE TİCARET LİMİTED ŞİRKETİ",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No : D BLOK 2. Kat 52 Nolu Ofis — Telefon : (262) 999-59-57",
+                website: "http://www.ankasys.com"
+            },
+            {
+                isim: "Ant Systems Nano Teknoloji Arge ve Tic. A.Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: 26 İç Kapı No: 48 Telefon: 05302900132",
+                website: "Web sitesi mevcut değil"
+            },
+            {
+                isim: "Appsilon İleri Malzemeler Danışmanlık Sanayi ve Ticaret Anonim Şirketi Serbest Bölge Gebze Şubesi",
+                adres: "Bölge : TEKGEB — Ofis No : YTB B BLOK ZEMİN KAT BL 1-2-3-4-5-6-12 NOLU OFİSLER — Telefon : (539) 722-18-93",
+                website: "http://www.appsilonscientific.com"
+            },
+            {
+                isim: "Arıdolu Akıllı Sistemler ve Sürdürülebilir Çözümler A.Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi No: 26/48 Telefon: 05305859919",
+                website: "http://aridolu.com"
+            },
+            {
+                isim: "Armsan Silah Sanayi ve Ticaret Anonim Şirketi",
+                adres: "Bölge : TEKGEB — Ofis No : 16 ADA PARSEL NO 2 — Telefon : (536) 789-63-50",
+                website: "http://www.armsan.com"
+            },
+            {
+                isim: "ARTEKYA TEKNOLOJİ LTD. ŞTİ.",
+                adres: "Bölge : TEKGEB — Ofis No : YTB D BLOK ZEMİN KAT VE 2. KAT — Telefon : (212) 670-13-95",
+                website: "http://www.artekya.com"
+            },
+            {
+                isim: "ARTEKYA UYGULAMA ALANI",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No : BODRUM KAT — Telefon : (212) 670-13-95",
+                website: "http://www.artekya.com"
+            },
+            {
+                isim: "ArtıSoft Yazılım Danışmanlık ve Teknoloji Hizmetleri San. Tic. A.Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: F Blok, 2. Kat, 45 numaralı ofis Telefon: (+90) 850 888 1 888",
+                website: "https://www.artisoft.com.tr/"
+            },
+            {
+                isim: "Ata Silah San. A.Ş.",
+                adres: "Bölge: TEKSEB — Ofis No : 16 ADA PARSEL NO:3 Ofis No: – Telefon: 02164664568",
+                website: "https://www.ataarms.com"
+            },
+            {
+                isim: "AVD TELNOLOJİ DAN. SAN. VE TİC. A.Ş. TÜBİTAK MAM SERBEST BÖLGE ŞUBESİ",
+                adres: "Bölge : TEKSEB — Ofis No : YTB B BLOK L-11 NOLU OFİS — Telefon : (530) 294-90-81",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "AYBİ TEKNOLOJİ SİSTEM ve YAZILIM DANIŞMANLIK",
+                adres: "IDEA Incubation Ofis no. 224",
+                website: "http://aybitech.com"
+            },
+            {
+                isim: "Aydınlı Biyoteknoloji A.Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: Idea Incubation Kuluçka Merkezi Telefon: 0534 391 84 78",
+                website: "https://aydinlibiyoteknoloji.com"
+            },
+            {
+                isim: "B TECH ANALYTICS TEKNOLOJİ",
+                adres: "IDEA Incubation Ofis no. 200 Tel: 0212 936 04 84",
+                website: "https://opwire.app/"
+            },
+            {
+                isim: "Berta Otomasyon Hareket Kontrol Sistemleri A.Ş",
+                adres: "Bölge: Marmara Teknokent Ar-Ge ve İnovasyon Merkezi Ofis No: 1. Kat 32 numaralı ofis Telefon: 0530 455 66 28",
+                website: "http://www.berta.com.tr"
+            },
+            {
+                isim: "BEY VENTURE YAZILIM VE BİLİŞİM TEKNOLOJİLERİ LİMİTED ŞİRKETİ",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No : 124 Nolu Ofis — Telefon : (532) 515-64-32",
+                website: "http://www.beyven.com"
+            },
+            {
+                isim: "BİCENTRİX YAZILIM VE DANIŞMANLIK LTD ŞTİ",
+                adres: "Bölge : TEKSEB — Ofis No : 30 / 7 – 1 – 2 NOLU OFİS — Telefon : (216) 572-47-75",
+                website: "http://www.bicentrix.com"
+            },
+            {
+                isim: "BİEM İLAÇ SAN. ve TİC. A.Ş",
+                adres: "İDARİ VE KULUÇKA BİNASI Ofis No: F BLOK 1. KAT 19-20 NOLU OFİS Tel: 531 420 77 47",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "Bilgi Global Bilişim Verianaliz Ltd.Şti.",
+                adres: "Bölge: Kadir Has TEKGEB yerleşkesi, Ofis No: Kat 1 – 133 Telefon: 0544 711 08 70",
+                website: "https://bilgias.com/"
+            },
+            {
+                isim: "Biosan Biyoteknoloji San. ve Dış. Tic. A.Ş.",
+                adres: "Bölge: İdari ve Kuluçka Binası Ofis No: 1. Kat No:30-31 numaralı ofis Telefon: 0262 503 25 10",
+                website: "https://www.biosanas.com.tr/"
+            },
+            {
+                isim: "Birleşik Yazılım Hizmetleri Ltd. Şti.",
+                adres: "Bölge: Kadir Has Binası Ofis No: 1.Kat İç Kapı No: 121 Telefon: +90 850 433 1 377",
+                website: "https://dinamo.plus/"
+            },
+            {
+                isim: "Blok Games",
+                adres: "Bölge: Ar-Ge ve İnavasyon Binas Ofis No: Np: 26 İç Kapı No: 48 Mail: info@blokgames.co",
+                website: "https://www.blokgames.co/"
+            },
+            {
+                isim: "BMT Teknoloji ve Proses Geliştirme Ltd. Şti",
+                adres: "Bölge: Teknoloji Geliştirme Bölgesi Ofis No: 11-12 Telefon: 0532 251 10 85",
+                website: "http://www.coldmer@com.tr"
+            },
+            {
+                isim: "BNW GRUP SAVUNMA SAN. DIŞ. TİC. LTD. ŞTİ.",
+                adres: "Bölge : KULUÇKA — Ofis No : K1. 169 — Telefon : (532) 271-05-76",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "BRAMHERS MÜHENDİSLİK",
+                adres: "Ar-Ge ve İnovasyon Merkezi Ofis no. A Blok 2. Kat No:48 Tel: 0535 345 0131",
+                website: "http://www.bramhers.com"
+            },
+            {
+                isim: "CANİKSOFT YAZILIM LİMİTED ŞİRKETİ",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No : C BLOK 2. Kat 57 Nolu Ofis — Telefon : (538) 725-30-60",
+                website: "http://www.caniksoft.com"
+            },
+            {
+                isim: "ÇAP TEKNOLOJİ DANIŞMANLIK VE YAZILIM HİZ.SAN.VE TİC.LTD.ŞTİ.",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No : 139-B NOLU OFİS — Telefon : (552) 293-13-92",
+                website: "https://capteknoloji.com/"
+            },
+            {
+                isim: "CBRN International Savunma Sanayi A.Ş.",
+                adres: "Bölge: TEKSEB Ofis : Yeni Teknoloji Binası A Blok No:4A/101 Gebze/ Kocaeli Telefon: 0 (530) 140 65 01 – 0 (533) 701 65 02",
+                website: "http://www.cbrnintl.com"
+            },
+            {
+                isim: "CENOLİFE BİYOLOJİK VE TIBBİ ÜRÜNLER SAN.VE TİC.LTD.ŞTİ.",
+                adres: "Bölge : TEKSEB — Ofis No : A Blok Zemin Kat No: AL-7-8 — Telefon : (212) 293-86-81",
+                website: "http://www.cenomed.com.tr"
+            },
+            {
+                isim: "CENTRA YAZILIM BİLİŞİM ARGE DAN. DONANIM SAN. LTD ŞTİ",
+                adres: "Bölge : TEKSEB — Ofis No : 30/22 NOLU OFİS — Telefon : (532) 488-00-70",
+                website: "http://www.centrayazilim.com"
+            },
+            {
+                isim: "CEOTECH BİLİŞİM SİSTEMLERİ A.Ş.",
+                adres: "Adres: TÜBİTAK MAM GEBZE YERLEŞKESİ TEKNOLOJİ GELİŞTİRME BÖLGESİ KADİR HAS BİNASI NO:Z13 GEBZE KOCAELİ 41470 Telefon : (532) 234-76-09",
+                website: "http://www.ceotech.net"
+            },
+            {
+                isim: "CFN AR-GE ve Teknoloji A.Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon MerkeziOfis No: B Blok 2. Kat 50 Numaralı Ofis Telefon: 0 262 290 86 55",
+                website: "https://www.cfnkimya.com/"
+            },
+            {
+                isim: "Chemistis Kimya San. ve Tic. A. Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi",
+                website: "http://www.chemistis.com"
+            },
+            {
+                isim: "Core Yazılım ve Otomasyon",
+                adres: "Bölge: ARGE VE İNOVASYON BİNASI Ofis No: IDEA Incubation Ofis no. 207 Telefon: 0530 449 69 96",
+                website: "https://coreotomasyon.com/"
+            },
+            {
+                isim: "Cortus Teknoloji Ltd. Şti.",
+                adres: "Bölge : Barış SB Mah. 5003 Sk. Teksen Kadir Has Binası No:2 İç kapı No: 127 Gebze/Kocaeli İletişim: 0216 661 41 45",
+                website: "https://www.martelektronik.com/"
+            },
+            {
+                isim: "Cosmokod Yazılım ve Bilişim Sistemleri",
+                adres: "Bölge: Arge ve İnovasyon Merkezi Ofis No: 2. Kat 48 Numaralı Kuluçka Merkezi Telefon: 0533 225 1569",
+                website: "https://www.cosmokod.com"
+            },
+            {
+                isim: "CT FARMA İLAÇ VE BİYOTEKNOLOJİ ARAŞTIRMA GELİŞTİRME SAN. DIŞ TİC. LTD. ŞTİ",
+                adres: "Bölge : TEKGEB — Ofis No : 30/23-30/24 NOLU OFİS — Telefon : (262) 642-04-21",
+                website: "https://www.ctpharma.com.tr"
+            },
+            {
+                isim: "CUBETRON YAZILIM SANAYİ LTD. ŞTİ.",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No : 140 NOLU OFİS — Telefon : (532) 515-44-88",
+                website: "http://www.cubetron.com.tr"
+            },
+            {
+                isim: "DAHİ BİLİŞİM TEKNOLOJİLERİ VE YAZILIM SAN. TİC. LTD. ŞTİ.",
+                adres: "Bölge : TEKGEB — Ofis No : 30/18-2 NOLU OFİS — Telefon : (544) 553-04-44",
+                website: "http://www.dahibilisim.com.tr"
+            },
+            {
+                isim: "DEVARP MEKATRONİK A.Ş.",
+                adres: "Bölge : TEKGEB — Ofis No: 30/13 NOLU OFİS 30/14 NOLU OFİS — Telefon : (539) 660-42-42",
+                website: "http://www.devarp.com"
+            },
+            {
+                isim: "DEVIUM TEKNOLOJİ A.Ş.",
+                adres: "Bölge : KULUÇKA — Ofis No: K1.186 — Telefon : (532) 175-42-99",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "DİNAMİK BİLGİ TEKNOLOJİLERİ ANONİM ŞİRKETİ TEKNOKENT ŞUBESİ",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No: B BLOK 2. Kat 54 Nolu Ofis — Telefon : (533) 644-55-75",
+                website: "https://dinamikotomotiv.com.tr/"
+            },
+            {
+                isim: "DTİ İmplant Sistemleri San. Tic. A.Ş.",
+                adres: "Bölge: TÜBİTAK-MAM TEKSEB Sitesi Barış SB Mah. 5001 Sk. No: 16 Gebze/Kocaeli – TÜRKİYE Telefon: +90 (552) 177 89 09",
+                website: "http://www.dtiimplant.com"
+            },
+            {
+                isim: "Eczacıbaşı Monrol Nükleer Ürünler San. ve Tic. A.Ş.",
+                adres: "Bölge: TEKGEB Ofis No: 234 nolu ada 27. parsel Telefon: 0262 648 02 00",
+                website: "https://monrol.com/"
+            },
+            {
+                isim: "EDELL TEKNOLOJİ",
+                adres: "IDEA Incubation Ofis no. 219 Tel: 0542 211 4909",
+                website: "http://edellgames.com"
+            },
+            {
+                isim: "Elendin Eğitim ve Teknoloji A.Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: A Blok 2. Kat No:26/48 Telefon: 0541 784 4745",
+                website: "http://elendin.com"
+            },
+            {
+                isim: "EPİSOME BİYOTEKNOLOJİK ÜRÜNLER SAN. TİC. A.Ş.",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No: B BLOK 1. KAT 03 NOLU OFİS — Telefon : 0216 5043880",
+                website: "http://www.episomebiotech.com"
+            },
+            {
+                isim: "Epozzy Teknoloji A.Ş.",
+                adres: "Bölge: Teknoloji Geliştirme Bölgesi Ofis No: Kadir Has Binası 131 numaralı ofis Telefon: 0850 885 0950",
+                website: "https://www.epozzy.com"
+            },
+            {
+                isim: "EWMOBIL YAZILIM DANIŞMANLIK ŞİRKETİ",
+                adres: "Bölge : KULUÇKA — Ofis No: K1.163 — Telefon : (505) 627-74-16",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "FİLİK NANOBİOAGROTECH",
+                adres: "Bölge : Ar-Ge ve İnovasyon Merkezi Ofis no: NO:26 İÇ KAPI NO:48 Telefon: 0532 764 91 01",
+                website: "https://www.filiknanobioagrotech.com.tr"
+            },
+            {
+                isim: "Fluxion Lab Elektronik Bilişim AR-GE",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: A Blok 2. Kat 48 numaralı ofis Kuluçka Merkezi Telefon: +90 (536) 577 40 21",
+                website: "https://www.fluxionlab.com/"
+            },
+            {
+                isim: "Gamma Technics Elektrik Elektronik ve Dış Ticaret Ltd. Şti.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Binası Ofis No: NO:14 Giriş Katı Telefon: 0531 884 33 50",
+                website: "https://gamma-technics.com/"
+            },
+            {
+                isim: "GE MARMARA TECHNOLOGY CENTER MUH. HIZM. LTD. STI.",
+                adres: "Bölge : TEKSEB — Ofis No: 1-2-9-10-11-12 Nolu Ada Parsel — Telefon : (262) 677-60-00",
+                website: "http://www.ge.com"
+            },
+            {
+                isim: "GELİŞMİŞ SİSTEM TEKNOLOJİLERİ SAN. VE TİC. A.Ş.",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No: A BLOK 1. KAT İÇ KAPI NO:21 — Telefon : (262) 642-01-11",
+                website: "http://www.gesistek.com/"
+            },
+            {
+                isim: "GENBİL YAZILIM TİCARET VE SANAYİ A.Ş.",
+                adres: "Bölge : TEKSEB — Ofis No: YTB A Blok Kat:1 107 — Telefon : (216) 663-60-04",
+                website: "http://www.genbil.com"
+            },
+            {
+                isim: "GENOMER BİYOTEKNOLOJİ ARGE SANAYİ VE TİCARET LİMİTED ŞİRKETİ",
+                adres: "Bölge : TEKSEB — Ofis No: YTB A BLOK ZEMİN KAT AL-9 NOLU OFİS — Telefon : (532) 381-80-15",
+                website: "https://genomer.com.tr/"
+            },
+            {
+                isim: "Grace Studio Oyun ve Bilgi Teknolojileri Ltd. Şti.",
+                adres: "Bölge: TÜBİTAK Teknoloji Geliştirme Bölgesi Ofis: Ar-Ge İnovasyon Binası, Kuluçka Merkezi, Ofis No: 48 Telefon: +90 532 236 1388",
+                website: "http://gracestudio.gg"
+            },
+            {
+                isim: "Greenjobs Bilgi Teknolojileri ve Danışmanlık Ltd. Şti.",
+                adres: "IDEA incubation 0 (850) 346 33 11",
+                website: "https://www.greenjobs.com.tr"
+            },
+            {
+                isim: "Haver Farma İlaç A.Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: B Blok 1. Kat No:36-38 Telefon: 0262 445 00 44",
+                website: "https://www.haver.com.tr/"
+            },
+            {
+                isim: "HELIXOME YAŞAM BİLİMLERİ VE BİLİŞİM",
+                adres: "IDEA Incubation Ofis no. 214",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "HT Office Yazılım ve Mimarlık San. A.Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi ( Kuluçka ) Ofis No: IDEA INCUBATION Telefon: 0546 546 71 33",
+                website: "https://htoffice.tr/"
+            },
+            {
+                isim: "IBTECH ULUSLARARASI BİLİŞİM Ve İLETİŞİM TEKN. AR-GE DAN. DESTEK SAN.ve TİC. A.Ş.",
+                adres: "Bölge : TEKSEB — Ofis No: 3-4-5-6-7-8 — Telefon : (262) 679-15-00",
+                website: "http://www.ibtech.com.tr"
+            },
+            {
+                isim: "ICTECH YAZILIM VE İLETİŞİM TEKNOLOJİLERİ A.Ş.",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No: Z-09/10 NOLU OFİSLER",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "İDİL BİOTECH ARAŞTIRMA SAN. VE TİC. LTD. ŞTİ.",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No: Z-14 / Z-46 NOLU OFİS — Telefon : (533) 778-86-29",
+                website: "http://www.idilbiotech.com"
+            },
+            {
+                isim: "Inextract Biyoteknoloji A.Ş.",
+                adres: "Bölge: Türkiye Gıda İnovasyon Platformu | TÜGİP Ofis No: 1. Kat 11 numaralı ofis Telefon: 0506 180 99 94",
+                website: "https://www.inextract.com/"
+            },
+            {
+                isim: "İnovaplus Mühendislik Arge Ltd. Şti.",
+                adres: "Firma adı:Bölge: KADİR HAS BİNASI Ofis No: A Blok 1. Kat 125 numaralı ofis Telefon: 0262 676 62 00",
+                website: "https://inovaplus.net"
+            },
+            {
+                isim: "İNTER AKTİF GRUP BİLİŞİM ELEKTRONİK TASARIM TEKNOLOJİ SAN. VE TİC. A.Ş. TEKNOLOJİ GELİŞTİRME BÖLGESİ ŞUBESİ",
+                adres: "Bölge : TEKGEB — Ofis No: 30/4-2NOLU OFİS — Telefon : (216) 587-30-46",
+                website: "http://www.interaktifgrup.com"
+            },
+            {
+                isim: "ISR Bilgi Güvenliği Ar. Ge. ve Yazılım Destek Hizm. Ltd. Şti.",
+                adres: "Bölge: Teknoloji Geliştirme Bölgesi Ofis No: TEKGEB B Blok 19 (40-1) Telefon: 0216 450 25 94",
+                website: "https://www.isr.com.tr"
+            },
+            {
+                isim: "İSTANBUL BİLİM ÜNİVERSİTESİ TEKNOLOJİ TRANSFER OFİSİ ANONİM ŞİRKETİ",
+                adres: "Bölge : TEKGEB — Ofis No: İÇ KAPI NO:9 — Telefon : (212) 213-64-86",
+                website: "http://www.istanbulbilim.edu.tr"
+            },
+            {
+                isim: "İstech Bilişim ve Dan. Hiz. Paz. Tic. Ltd. Şti.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: B Blok 1. Kat 108 numaralı ofis Telefon: 537 287 67 12",
+                website: "Web sitesi mevcut değil"
+            },
+            {
+                isim: "ITHİNKA ARAŞTIRMA GELİŞTİRME YAZILIM VE DAN. A.Ş.",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No: B BLOK 2. KAT İÇ KAPI NO:55 — Telefon : 0(850) 259 58 88",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "JOKER GAME BİLİŞİM A.Ş",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No: 126 NOLU OFİS",
+                website: "http://jokergame.net"
+            },
+            {
+                isim: "JTR Mücevher Teknolojileri Araştırma Merkezi A.Ş.",
+                adres: "Ar-Ge ve İnovasyon Merkezi – Ofis no: 41 2. Kat +90 (850) 217 38 66",
+                website: "https://www.jtr.org/tr"
+            },
+            {
+                isim: "KAMİL YAVUZ",
+                adres: "Bölge : TEKGEB — Ofis No: 30/6-2 NOLU OFİS — Telefon : 542) 781-45-00",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "KARAKAŞ AR-GE TEKN.ULAŞ.GEMİ MADEN METAL SAN.VE TİC.A.Ş.",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No: F BLOK 2. KAT 43 NOLU OFİS — Telefon : (262) 502-21-90",
+                website: "https://www.karakastech.com.tr/"
+            },
+            {
+                isim: "KESTECH MAKİNE İNOVASYON SANAYİ VE TİCARET LİMİTED ŞİRKETİ",
+                adres: "Bölge : TEKSEB — Ofis No: 4.Parsel — Telefon : (262) 654-06-54",
+                website: "http://www.kes-tech.com"
+            },
+            {
+                isim: "Kontrolist Mühendislik Taahhüt Sanayi Ticaret Limited Şirketi Gebze Şubesi",
+                adres: "30/11 içkapı 2 nolu ofis 0216 360 30 67",
+                website: "https://www.kontrolist.com/"
+            },
+            {
+                isim: "Life Team Medikal San. Tic. Ltd. Şti.",
+                adres: "Ar-Ge ve İnovasyon Merkezi İdea İncubation 0850 840 7859",
+                website: "http://www.lifeteam.com.tr"
+            },
+            {
+                isim: "LİNK TERA BİLGİ TEKNOLOJİLERİ A.Ş.",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No: 1. KAT 4 Nolu Ofis — Telefon : (216) 290-26-14",
+                website: "http://www.riskplus.com.tr"
+            },
+            {
+                isim: "Localvore Biyoteknoloji Sanayi A.Ş.",
+                adres: "Bölge: Türkiye Gıda İnovasyon Platformu (TÜBİTAK, MAM Yerleşkesi) Ofis No: 8",
+                website: "https://www.localvore.com.tr"
+            },
+            {
+                isim: "LUK Botanik Endüstri ve Ticaret Anonim Şirketi",
+                adres: "Bölge : TEKSEB — Ofis No: 1 Nolu Parsel — Telefon : (532) 211-78-10",
+                website: "http://lukbotanik.com/"
+            },
+            {
+                isim: "Melit Farm Gıda Tarım Teknoloji San. ve Tic. A.Ş.",
+                adres: "Bölge: TÜGİP Kuluçka Merkezi Ofis No: TÜGİP No:6 Telefon: 0533 153 17 91",
+                website: "https://melitfarm.com/"
+            },
+            {
+                isim: "Metasis Teknoloji Tic.Ltd.Şti.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: 1. Kat 18 numaralı ofis Telefon: 0262 502 42 27",
+                website: "https://www.metasis.com.tr/"
+            },
+            {
+                isim: "Mikrofleks Mems Teknoloji San. ve Tic. A.Ş.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Binası No:26, İç kapı No: 48, Gebze Telefon: +90 5077525120",
+                website: "https://mikrofleks.com"
+            },
+            {
+                isim: "MİNG DANIŞMANLIK ve PAZARLAMA",
+                adres: "IDEA Incubation Ofis no. 216 Telefon: 0533 552 12 21",
+                website: "http://mingapp.co"
+            },
+            {
+                isim: "MIONTI ENERJİ ve TEKNOLOJİ",
+                adres: "IDEA Incubation Ofis no. 206",
+                website: "http://www.mionti.com"
+            },
+            {
+                isim: "Model İnsan Kaynakları Eğitim ve Danışmanlık Hizmetleri Ltd. Şti",
+                adres: "Bölge : KULUÇKA — Ofis No: K1.166 — Telefon : (530) 973-18-00",
+                website: "http://www.model-hr.com"
+            },
+            {
+                isim: "MOONSOFT YAZILIM BİLGİ TEKNOLOJİLERİ LİMİTED ŞİRKETİ",
+                adres: "Bölge : KULUÇKA — Ofis No: K1.179 — Telefon : (546) 592-14-04",
+                website: "http://www.biriktir.app"
+            },
+            {
+                isim: "MOR YAZILIM HİZMETLERİ VE BİLGİSAYAR SİSTEMLERİ LTD. ŞTİ.",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No: 105 Nolu Ofis — Telefon : (216) 573-56-00",
+                website: "http://www.moryazilim.com.tr"
+            },
+            {
+                isim: "MORQET BİLİŞİM TEKNOLOJİLERİ A.Ş.",
+                adres: "Bölge : KULUÇKA — Ofis No: K1.182 — Telefon : (532) 132-66-12",
+                website: "https://morqet.com/"
+            },
+            {
+                isim: "MPOINT TEKNOLOJİ İNOVASYON MAKİNA SAN. TİC. LTD. ŞTİ.",
+                adres: "Bölge : KULUÇKA — Ofis No: K1.164 — Telefon : (505) 239-91-15",
+                website: "http://www.magneticpointer.com"
+            },
+            {
+                isim: "Nepenthe Araştırma Teknolojileri Ltd.Şti.",
+                adres: "Bölge: Teknoloji Geliştirme Bölgesi Ofis No: 30/5 1 ve 2 nolu ofis Email: destek@nepenthe.com.tr",
+                website: "http://www.nepenthe.com.tr"
+            },
+            {
+                isim: "NOBEL İLAÇ SANAYİİ VE TİCARET ANONİM ŞİRKETİ GEBZE TEKNOLOJİ GELİŞTİRME BÖLGESİ TEKNOKENT ŞUBESİ",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No: 1. KAT 15-16-17-18 Nolu Ofisler — Telefon : (216) 633-60-00",
+                website: "http://www.nobel.com.tr/"
+            },
+            {
+                isim: "NW Teknoloji",
+                adres: "Bölge: Teknoloji Serbest Bölge Ofis No: B Blok 2. Kat 206 Numaralı Ofis Telefon: 05323651379 Email:mustafasaka@lfbcon.com",
+                website: "Web sitesi mevcut değil"
+            },
+            {
+                isim: "OKOSIS OTOMASYON VE KONTROL SİSTEMLERİ SANAYİ VE TİC. LTD. ŞTİ.",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No: C BLOK 1.Kat 26 Nolu Ofis — Telefon : (262) 644-37-75",
+                website: "http://www.okosis.com"
+            },
+            {
+                isim: "OSSEN Yazılım ve Enerji AŞ",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ar-Ge ve İnovasyon Binası Idea Incubation No: 48 Telefon: 0537 593 4110",
+                website: "http://www.ossen.com.tr"
+            },
+            {
+                isim: "PAK ARGE HİZMETLERİ İMALAT VE TİCARET A.Ş.",
+                adres: "Bölge : TEKSEB — Ofis No: 30/19-1-2 NOLU OFİS — Telefon : (262) 642-73-42",
+                website: "http://www.pakarge.com"
+            },
+            {
+                isim: "Phitech Bilişim Biyoteknoloji Dan. Arge San. Tic. A.Ş.",
+                adres: "Bölge: Teknoloji Geliştirme Bölgesi Ofis No: 30/18-1 ve 30/9-2 Numaralı Ofis Telefon: 0262 644 66 56",
+                website: "https://phitech.bio"
+            },
+            {
+                isim: "PİGON TEKNOLOJİ LTD. ŞTİ.",
+                adres: "IDEA Incubation Ofis No. 212 Tel: 0533 475 70 40",
+                website: "https://www.pigontech.com"
+            },
+            {
+                isim: "Pixera Elektronik ve Yazılım Teknolojileri LTD. ŞTİ.",
+                adres: "Bölge: Ar-Ge ve İnovasyon Binası Ofis No: 2. Kat 39 numaralı ofis Telefon: 0262 503 53 23",
+                website: "http://pixeratech.com"
+            },
+            {
+                isim: "POMELO YAZILIM DANIŞMANLIK TİCARET",
+                adres: "YTB A Blok 1. Kat 110",
+                website: "http://www.pomelosoft.com"
+            },
+            {
+                isim: "POYRAI YAPAY GÖRME SİSTEMLERİ SAN. VE TİC. A.Ş.",
+                adres: "Bölge : KULUÇKA — Ofis No: K1.196 — Telefon : (531) 934-49-57",
+                website: "http://www.poyrai.com"
+            },
+            {
+                isim: "Proceed Kurumsal Bilgi Sistemleri Tic. Ltd. Şti.",
+                adres: "Bölge: Kadir Has Binası Ofis No: Z43-44 Telefon: 0216 807 04 07",
+                website: "http://proceed.com.tr"
+            },
+            {
+                isim: "PROTEK SAĞLIK BİLİŞİM A.Ş.",
+                adres: "Bölge : TEKSEB — Ofis No: 30/10-1 NOLU OFİS — Telefon : (262) 606-06-15",
+                website: "http://www.proteksaglik.com"
+            },
+            {
+                isim: "PROTEK YAZILIM SİSTEM DANIŞMANLIK BİLGİSAYAR SANAYİ VE TİCARET LİMİTED ŞİRKETİ",
+                adres: "Bölge : TEKSEB — Ofis No: 30/2-1 NOLU OFİS — Telefon : (533) 354-06-61",
+                website: "http://www.proteksistem.com"
+            },
+            {
+                isim: "QUALES İŞ ÇÖZÜMLERİ A.Ş.",
+                adres: "Bölge : TEKSEB — Ofis No: 30/20-1 NOLU OFİS — Telefon : (532) 673-67-49",
+                website: "https://quales.com.tr/"
+            },
+            {
+                isim: "ROUTE YAZILIM VE DANIŞMANLIK SAN. VE TİC. LTD. ŞTİ.",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No: 135-136 — Telefon : (262) 330-02-37",
+                website: "http://www.dgroute.com"
+            },
+            {
+                isim: "RUT Yazılım San. ve Tic. A.Ş.",
+                adres: "Bölge: Kadir Has Binası Ofis No: İç Kapı No: Z52 Telefon: +90 530 333 29 58",
+                website: "https://rut.com.tr/"
+            },
+            {
+                isim: "SAPMENTOR YAZILIM DANIŞMANLIK HİZMETLERİ LİMİTED ŞİRKETİ",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No: 138 Nolu Ofis — Telefon : (530) 403-96-10",
+                website: "http://www.sapmentor.com"
+            },
+            {
+                isim: "SEAL Mühendislik",
+                adres: "Bölge: Ar-Ge ve İnovasyon Merkezi Ofis No: K:1 / 265 Telefon: 0216 766 76 63",
+                website: "https://sealmuhendislik.com/"
+            },
+            {
+                isim: "SERHAT IŞIK",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No: 129 NOLU OFİS — Telefon : (536) 476-96-22",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "SFI KURUMSAL BİLGİ SİSTEMLERİ AR-GE YAZILIM SAN. VE TİC. LTD. ŞTİ TÜBİTAK GEBZE YERLEŞKESİ TEKGEB ŞUBESİ",
+                adres: "Bölge : İDARİ VE KULUÇKA BİNASI — Ofis No: B BLOK 2. Kat 47 Nolu Ofis — Telefon : (216) 545-96-96",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "SIMUTECH ARAŞTIRMA GELİŞTİRME",
+                adres: "IDEA Incubation Ofis no. 223",
+                website: "https://www.simutech.com.tr"
+            },
+            {
+                isim: "SİNARGE MÜHENDİSLİK YAZILIM VE DANIŞMANLIK LTD. ŞTİ.",
+                adres: "Bölge : KADİR HAS BİNASI — Ofis No: 107 NOLU OFİS — Telefon : (532) 540-16-58",
+                website: "Firma detay sayfası"
+            },
+            {
+                isim: "Sistematik Otvt Bilgi Teknolojileri ic. Ltd. Şti.",
+                adres: "Bölge : TEKSEB — Ofis No: 30/16-2 — Telefon : (555) 488-00-01",
+                website: "http://www.sistematikotvt.com"
+            },
+            {
+                isim: "Sivart Endüstriyel Otomasyon Sistemleri San. Tic. Ltd. Şti.",
+                adres: "Bölge: TEKSEB Ofis No: 30/3-2 NOLU OFİS Telefon: 0 262 655 39 80",
+                website: "https://www.sivart.com.tr/"
+            },
+            {
+                isim: "SOFTAY YAZILIM ve BİLİŞİM TEKNOLOJİLERİ",
+                adres: "TEKGEB A Blok 8 Tel: 0216 537 7450",
+                website: "https://softay.com.tr/"
+            },
+            {
+                isim: "SST TEKNOLOJİ A.Ş. TÜBİTAK MAM SERBEST BÖLGE ŞUBESİ",
+                adres: "Bölge : TEKSEB — Ofis No: A BLOK 2. KAT 202 – 203 NOLU OFİSLER — Telefon : 0532 153 62 03",
+                website: "https://www.ssttek.com/"
+            },
+            {
+                isim: "STD BİLİŞİM VE DANIŞMANLIK HİZM. SAN. TİC. LTD. ŞTİ. GEBZE ŞUBESİ",
+                adres: "Bölge : KULUÇKA — Of
