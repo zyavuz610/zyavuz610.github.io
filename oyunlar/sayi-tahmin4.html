@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 Haneli Sayı Tahmin Oyunu</title>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #f1f8e9, #e3f2fd);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    color: #333;
+  }
+
+  header {
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  header img {
+    width: 180px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  h1 {
+    margin-top: 15px;
+    font-size: 1.8rem;
+    color: #2e7d32;
+  }
+
+  .game-container {
+    background: #ffffffd9;
+    padding: 20px 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-top: 20px;
+    width: 320px;
+    text-align: center;
+  }
+
+  .input-group {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+  }
+
+  input {
+    width: 120px;
+    padding: 8px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    text-align: center;
+    color: #333;
+  }
+
+  button {
+    margin: 5px;
+    padding: 8px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #fff;
+  }
+
+  #startBtn { background-color: #4caf50; }
+  #startBtn:hover { background-color: #388e3c; }
+
+  #guessBtn { background-color: #2196f3; }
+  #guessBtn:hover { background-color: #1976d2; }
+
+  #status {
+    font-size: 1rem;
+    margin: 8px 0;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .status-error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef5350;
+  }
+
+  .status-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #66bb6a;
+  }
+
+  .status-info {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #42a5f5;
+  }
+
+  .feedback-text {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 5px;
+    font-style: italic;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+
+  li {
+    background: #f1f8e9;
+    border-radius: 8px;
+    margin: 4px 0;
+    padding: 5px 10px;
+    font-size: 0.95rem;
+    color: #333;
+    border: 1px solid #c5e1a5;
+  }
+
+  .attempts {
+    margin-top: 8px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <img src="https://habertrabzontr.teimg.com/crop/1280x720/habertrabzon-tr/uploads/2025/01/engellilerin-umudu-sonuyor-en-mutlu-koy-projesi-iptal.jpg" alt="Oyun Logosu">
+    <h1>4 Haneli Sayı Tahmin Oyunu</h1>
+  </header>
+
+  <div class="game-container">
+    <button id="startBtn">Başlat / Yeniden Başlat</button>
+    <div class="attempts">Kalan Hak: <span id="remaining">13</span></div>
+
+    <div class="input-group">
+      <input type="number" id="guessInput" placeholder="Tahmin (4 haneli)" disabled>
+      <button id="guessBtn" disabled>Tahmin Et</button>
+    </div>
+
+    <div id="status"></div>
+    <div id="feedbackText" class="feedback-text"></div>
+    <ul id="history"></ul>
+  </div>
+
+<script>
+let secretNumber = "";
+let attempts = 13;
+
+const startBtn = document.getElementById("startBtn");
+const guessBtn = document.getElementById("guessBtn");
+const guessInput = document.getElementById("guessInput");
+const remainingSpan = document.getElementById("remaining");
+const statusDiv = document.getElementById("status");
+const feedbackText = document.getElementById("feedbackText");
+const historyList = document.getElementById("history");
+
+// --- Gizli sayı üret (4 haneli, rakamlar farklı, ilk rakam 0 değil)
+function generateSecretNumber() {
+  let digits = [];
+  while (digits.length < 4) {
+    let rand = Math.floor(Math.random() * 10);
+    if (!digits.includes(rand)) digits.push(rand);
+  }
+  if (digits[0] === 0) { // ilk rakam 0 olmasın
+    const nonZero = digits.find(d => d !== 0);
+    const idx = digits.indexOf(nonZero);
+    [digits[0], digits[idx]] = [digits[idx], digits[0]];
+  }
+  return digits.join('');
+}
+
+// --- Geri bildirim metni oluştur
+function getFeedbackText(plus, minus) {
+  let text = "";
+  if (plus > 0) {
+    text += `${plus} rakam${plus > 1 ? 'ın' : 'ın'} yeri doğru`;
+  }
+  if (minus > 0) {
+    if (text) text += ", ";
+    text += `${minus} rakam doğru ancak yeri yanlış`;
+  }
+  if (plus === 0 && minus === 0) {
+    text = "Hiçbir rakam doğru değil";
+  }
+  return text;
+}
+
+// --- Durum mesajını göster (renkli)
+function showStatus(message, type = 'info') {
+  statusDiv.textContent = message;
+  statusDiv.className = '';
+  if (type === 'error') statusDiv.classList.add('status-error');
+  else if (type === 'success') statusDiv.classList.add('status-success');
+  else if (type === 'info') statusDiv.classList.add('status-info');
+}
+
+// --- + ve - hesapla
+function compareNumbers(secret, guess) {
+  let plus = 0, minus = 0;
+  for (let i = 0; i < 4; i++) {
+    if (guess[i] === secret[i]) plus++;
+    else if (secret.includes(guess[i])) minus++;
+  }
+  return { plus, minus };
+}
+
+// --- Oyunu başlat
+startBtn.addEventListener("click", () => {
+  secretNumber = generateSecretNumber();
+  attempts = 13;
+  remainingSpan.textContent = attempts;
+  guessInput.disabled = false;
+  guessBtn.disabled = false;
+  guessInput.value = "";
+  showStatus("Tahmininizi girin!", "info");
+  feedbackText.textContent = "";
+  historyList.innerHTML = "";
+  guessInput.focus(); // Otomatik odaklan
+  console.log("Gizli sayı:", secretNumber); // Geliştirici için (kaldırılabilir)
+});
+
+// --- Tahmin işlemi
+function makeGuess() {
+  const guess = guessInput.value.trim();
+  
+  // Boş kontrol
+  if (!guess) {
+    showStatus("Lütfen bir sayı girin!", "error");
+    feedbackText.textContent = "";
+    return;
+  }
+  
+  // 4 haneli kontrol
+  if (guess.length !== 4) {
+    showStatus("Lütfen tam 4 haneli bir sayı girin!", "error");
+    feedbackText.textContent = `Girdiğiniz sayı ${guess.length} haneli. 4 haneli olmalı.`;
+    return;
+  }
+  
+  // Sayı kontrolü
+  if (isNaN(guess)) {
+    showStatus("Lütfen geçerli bir sayı girin!", "error");
+    feedbackText.textContent = "";
+    return;
+  }
+
+  // Kullanıcı rakamları kontrol et (tekrarsız mı)
+  const digits = guess.split('').map(Number);
+  const uniqueDigits = new Set(digits);
+  if (uniqueDigits.size !== 4) {
+    showStatus("Rakamlar birbirinden farklı olmalı!", "error");
+    feedbackText.textContent = "Örnek: 1234, 5678, 9012 gibi (tekrar eden rakam yok)";
+    return;
+  }
+  
+  // İlk rakam 0 kontrolü
+  if (digits[0] === 0) {
+    showStatus("İlk rakam 0 olamaz!", "error");
+    feedbackText.textContent = "Sayı 1000-9876 arasında olmalı (ilk rakam 1-9 arası)";
+    return;
+  }
+
+  const { plus, minus } = compareNumbers(secretNumber, guess);
+  const li = document.createElement("li");
+  li.textContent = `Tahmin: ${guess} → +${plus} | -${minus}`;
+  historyList.prepend(li);
+
+  attempts--;
+  remainingSpan.textContent = attempts;
+
+  if (plus === 4) {
+    showStatus("🎉 Tebrikler! Sayıyı buldunuz!", "success");
+    feedbackText.textContent = `Doğru sayı: ${secretNumber}`;
+    guessInput.disabled = true;
+    guessBtn.disabled = true;
+  } else if (attempts === 0) {
+    showStatus(`😢 Oyun bitti! Doğru sayı: ${secretNumber}`, "error");
+    feedbackText.textContent = "Yeniden denemek için 'Başlat' butonuna tıklayın";
+    guessInput.disabled = true;
+    guessBtn.disabled = true;
+  } else {
+    showStatus(`Sonuç: +${plus}, -${minus}`, "info");
+    feedbackText.textContent = getFeedbackText(plus, minus);
+  }
+
+  guessInput.value = "";
+  guessInput.focus();
+}
+
+guessBtn.addEventListener("click", makeGuess);
+
+// Enter tuşu ile tahmin
+guessInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter" && !guessInput.disabled) {
+    makeGuess();
+  }
+});
+</script>
+</body>
+</html>
