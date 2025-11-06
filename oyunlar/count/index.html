@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İKA Konferans Kayıt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .attendance-btn {
+            flex: 1;
+            min-width: 180px;
+            padding: 20px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .attendance-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .attendance-btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .attendance-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-male {
+            background: linear-gradient(135deg, #667eea 0%, #4facfe 100%);
+        }
+
+        .btn-female {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-male.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .btn-female.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .checkmark {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 40px;
+            animation: checkmarkPop 0.3s ease forwards;
+        }
+
+        .attendance-btn.success .checkmark {
+            display: block;
+        }
+
+        .attendance-btn.success .btn-text {
+            opacity: 0;
+        }
+
+        @keyframes checkmarkPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-45deg);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+        }
+
+        .info-text {
+            margin-top: 30px;
+            color: #888;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        #hiddenFrame {
+            display: none;
+        }
+
+        @media (max-width: 500px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .attendance-btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>İKA Konferans 2025</h1>
+        <p class="subtitle">Katılımınızı kaydedin</p>
+        
+        <div class="button-group">
+            <button class="attendance-btn btn-male" id="maleBtn" onclick="registerAttendance('E')">
+                <span class="btn-text">Erkek</span>
+                <span class="checkmark">✓</span>
+            </button>
+            
+            <button class="attendance-btn btn-female" id="femaleBtn" onclick="registerAttendance('K')">
+                <span class="btn-text">Kadın</span>
+                <span class="checkmark">✓</span>
+            </button>
+        </div>
+        
+        <p class="info-text">
+            Lütfen cinsiyetinize uygun butona tıklayarak katılımınızı kaydedin.<br>
+            Her tıklama otomatik olarak sisteme kaydedilecektir.
+        </p>
+    </div>
+
+    <!-- Gizli iframe - PHP sayfasını arka planda çağırmak için -->
+    <iframe id="hiddenFrame" name="hiddenFrame"></iframe>
+
+    <script>
+        function registerAttendance(gender) {
+            const btnId = gender === 'E' ? 'maleBtn' : 'femaleBtn';
+            const btn = document.getElementById(btnId);
+            
+            // Buton zaten aktif değilse işlem yapma
+            if (btn.disabled) return;
+            
+            // Butonu devre dışı bırak
+            btn.disabled = true;
+            btn.classList.add('success');
+            
+            // QR sayfasını gizli iframe'de çağır
+            const url = `https://sanalkent.ktu.edu.tr/qr.php?p1=ikakon25&p2=giris_${gender}&p3=btn`;
+            document.getElementById('hiddenFrame').src = url;
+            
+            // 1 saniye sonra butonu normale döndür
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.classList.remove('success');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
