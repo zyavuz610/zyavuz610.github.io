@@ -187,9 +187,20 @@
             btn.disabled = true;
             btn.classList.add('success');
             
-            // QR sayfasını gizli iframe'de çağır
+            // QR sayfasını fetch ile çağır
             const url = `https://sanalkent.ktu.edu.tr/qr.php?p1=ikakon25&p2=giris_${gender}&p3=btn`;
-            document.getElementById('hiddenFrame').src = url;
+            
+            // Yöntem 1: Fetch ile (önerilen)
+            fetch(url, {
+                method: 'GET',
+                mode: 'no-cors' // CORS hatalarını önlemek için
+            }).catch(err => {
+                console.log('İstek gönderildi');
+            });
+            
+            // Yöntem 2: Image pixel trick (yedek yöntem - aşağıdaki satırların başındaki // işaretini kaldırın)
+            // const img = new Image();
+            // img.src = url;
             
             // 1 saniye sonra butonu normale döndür
             setTimeout(() => {
