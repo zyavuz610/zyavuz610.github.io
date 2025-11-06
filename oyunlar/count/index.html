@@ -180,35 +180,15 @@
             // Buton zaten aktif değilse işlem yapma
             if (btn.disabled) return;
             
-            // Butonu devre dışı bırak
+            // Butonu devre dışı bırak ve animasyon göster
             btn.disabled = true;
             btn.classList.add('success');
             
-            // URL oluştur
-            const url = `https://sanalkent.ktu.edu.tr/qr.php?p1=ikakon25&p2=giris_${gender}&p3=btn&t=${new Date().getTime()}`;
-            
-            // Script tag ile GET isteği - CORS'u bypass eder
-            const script = document.createElement('script');
-            script.src = url;
-            script.onerror = function() {
-                console.log('İstek gönderildi (hata bekleniyor ama veri kaydedildi)');
-            };
-            document.body.appendChild(script);
-            
-            // Script tag'i temizle
+            // 500ms sonra sayfaya yönlendir (animasyonu görmek için kısa bir gecikme)
             setTimeout(() => {
-                if (script.parentNode) {
-                    script.parentNode.removeChild(script);
-                }
-            }, 2000);
-            
-            console.log('Kayıt gönderildi:', url);
-            
-            // 1 saniye sonra butonu normale döndür
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.classList.remove('success');
-            }, 1000);
+                const url = `https://sanalkent.ktu.edu.tr/qr.php?p1=ikakon25&p2=giris_${gender}&p3=btn`;
+                window.location.href = url;
+            }, 500);
         }
     </script>
 </body>
