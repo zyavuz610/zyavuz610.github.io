@@ -185,11 +185,22 @@
             btn.classList.add('success');
             
             // URL oluştur
-            const url = `https://sanalkent.ktu.edu.tr/qr.php?p1=ikakon25&p2=giris_${gender}&p3=btn`;
+            const url = `https://sanalkent.ktu.edu.tr/qr.php?p1=ikakon25&p2=giris_${gender}&p3=btn&t=${new Date().getTime()}`;
             
-            // Basit GET isteği - Image pixel trick
-            const img = new Image();
-            img.src = url + '&t=' + new Date().getTime();
+            // Script tag ile GET isteği - CORS'u bypass eder
+            const script = document.createElement('script');
+            script.src = url;
+            script.onerror = function() {
+                console.log('İstek gönderildi (hata bekleniyor ama veri kaydedildi)');
+            };
+            document.body.appendChild(script);
+            
+            // Script tag'i temizle
+            setTimeout(() => {
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            }, 2000);
             
             console.log('Kayıt gönderildi:', url);
             
