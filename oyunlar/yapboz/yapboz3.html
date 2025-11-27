@@ -103,31 +103,31 @@
 
         .game-content {
             display: flex;
-            gap: 15px;
+            flex-direction: row;
+            gap: 10px;
             height: calc(100% - 80px);
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
         }
 
         .target-grid, .pieces-area {
             background: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
-            height: 100%;
             overflow: auto;
+            width: 48%;
+            max-width: 600px;
         }
 
         .target-grid {
-            flex: 1;
-            min-width: 300px;
+            flex-shrink: 0;
         }
 
         .pieces-area {
-            flex: 1;
-            min-width: 300px;
+            flex-shrink: 0;
         }
 
         .target-grid h3, .pieces-area h3 {
@@ -369,15 +369,15 @@
             
             // Ekran boyutuna göre parça boyutunu hesapla
             const gameContent = document.querySelector('.game-content');
-            const availableWidth = gameContent.offsetWidth / 2 - 60;
-            const availableHeight = gameContent.offsetHeight - 100;
+            const availableWidth = (gameContent.offsetWidth / 2) - 50; // Her alan için yarı genişlik
+            const availableHeight = gameContent.offsetHeight - 80;
             
             // Parça boyutunu hesapla
             const calculatedWidth = Math.floor(availableWidth / cols);
             const calculatedHeight = Math.floor(availableHeight / rows);
             
             // Daha küçük olanı seç ve minimum/maksimum değerler belirle
-            pieceWidth = Math.max(50, Math.min(calculatedWidth, calculatedHeight, 120));
+            pieceWidth = Math.max(40, Math.min(calculatedWidth, calculatedHeight, 100));
             pieceHeight = pieceWidth;
             
             targetGrid.style.gridTemplateColumns = `repeat(${cols}, ${pieceWidth}px)`;
