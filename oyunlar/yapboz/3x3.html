@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pekünlü Merkez Pide - Yapboz Oyunu</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            user-select: none; /* Metin seçimini engelle */
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        #timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d35400;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Yapboz Tahtası (Hedef Alan) */
+        #puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            width: 300px;  /* Resim genişliğine göre ayarlanabilir */
+            height: 180px; /* Resim yüksekliğine göre oranlandı */
+            border: 2px solid #333;
+            background-color: #ddd;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .slot {
+            border: 1px dashed #999;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Karışık Parçalar Alanı */
+        #pieces-pool {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            width: 320px;
+            min-height: 100px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        /* Yapboz Parçası */
+        .piece {
+            width: 100px; /* 300px / 3 */
+            height: 60px; /* 180px / 3 */
+            background-image: url('logo.jpg'); /* RESİM DOSYA ADI BURAYA */
+            background-size: 300px 180px; /* Tahta boyutuyla aynı olmalı */
+            cursor: grab;
+            transition: transform 0.2s;
+            touch-action: none; /* Mobilde kaydırma sorununu çözer */
+        }
+
+        .piece:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Tebrikler Ekranı (Modal) */
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .btn {
+            background: #d35400;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        
+        /* Mobilde daha iyi görünüm için medya sorgusu */
+        @media (max-width: 400px) {
+            #puzzle-board {
+                width: 270px;
+                height: 162px;
+            }
+            .piece {
+                width: 90px;
+                height: 54px;
+                background-size: 270px 162px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pekünlü Merkez Pide</h1>
+    <div id="timer">02:00</div>
+
+    <div class="game-area">
+        <div id="puzzle-board"></div>
+        
+        <div id="pieces-pool"></div>
+    </div>
+
+    <div id="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Tebrikler!</h2>
+            <p id="modal-message">Oyunu kazandınız.</p>
+            <button class="btn" onclick="location.reload()">Tekrar Oyna</button>
+        </div>
+    </div>
+
+    <script>
+        // AYARLAR
+        const ROWS = 3;
+        const COLS = 3;
+        const TIME_LIMIT = 120; // Saniye (2 Dakika)
+        let timerInterval;
+        let isGameActive = true;
+        
+        // Elementler
+        const boardEl = document.getElementById('puzzle-board');
+        const poolEl = document.getElementById('pieces-pool');
+        const timerEl = document.getElementById('timer');
+        const modalEl = document.getElementById('modal');
+        
+        let pieces = [];
+        let draggedPiece = null;
+
+        // Oyunu Başlat
+        function initGame() {
+            // Tahtayı oluştur (Slotlar)
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    let slot = document.createElement('div');
+                    slot.classList.add('slot');
+                    slot.dataset.row = r;
+                    slot.dataset.col = c;
+                    // Doğru parça ID'si: "piece-r-c"
+                    slot.dataset.expected = `piece-${r}-${c}`;
+                    
+                    // Sürükle-Bırak Olayları (Slot için)
+                    slot.addEventListener('dragover', handleDragOver);
+                    slot.addEventListener('drop', handleDrop);
+                    
+                    boardEl.appendChild(slot);
+                }
+            }
+
+            // Parçaları oluştur
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    let piece = document.createElement('div');
+                    piece.classList.add('piece');
+                    piece.id = `piece-${r}-${c}`;
+                    piece.draggable = true;
+                    
+                    // Arka plan pozisyonunu ayarla (Resmi bölmek için)
+                    let posX = (c / (COLS - 1)) * 100;
+                    let posY = (r / (ROWS - 1)) * 100;
+                    piece.style.backgroundPosition = `${posX}% ${posY}%`;
+                    
+                    // Sürükleme Olayları (Masaüstü)
+                    piece.addEventListener('dragstart', handleDragStart);
+                    
+                    // Dokunmatik Olayları (Mobil)
+                    piece.addEventListener('touchstart', handleTouchStart, {passive: false});
+                    piece.addEventListener('touchmove', handleTouchMove, {passive: false});
+                    piece.addEventListener('touchend', handleTouchEnd);
+
+                    pieces.push(piece);
+                }
+            }
+
+            // Parçaları karıştır ve havuza ekle
+            pieces.sort(() => Math.random() - 0.5);
+            pieces.forEach(p => poolEl.appendChild(p));
+
+            startTimer();
+        }
+
+        // --- ZAMANLAYICI ---
+        function startTimer() {
+            let timeLeft = TIME_LIMIT;
+            updateTimerDisplay(timeLeft);
+
+            timerInterval = setInterval(() => {
+                if (!isGameActive) return;
+                timeLeft--;
+                updateTimerDisplay(timeLeft);
+
+                if (timeLeft <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            timerEl.textContent = `${m}:${s}`;
+            
+            if (seconds < 30) timerEl.style.color = 'red';
+        }
+
+        // --- MASAÜSTÜ SÜRÜKLEME (Drag & Drop API) ---
+        function handleDragStart(e) {
+            if (!isGameActive) return;
+            draggedPiece = e.target;
+            e.dataTransfer.setData('text/plain', e.target.id);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault(); // Bırakmaya izin ver
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            if (!isGameActive) return;
+            
+            // Eğer bırakılan yer bir slot ise veya slotun içindeki bir parça ise
+            let target = e.target;
+            
+            // Eğer parçanın üzerine bırakıldıysa, o parçanın olduğu slotu bul
+            if (target.classList.contains('piece')) {
+                target = target.parentElement;
+            }
+
+            // Eğer hedef geçerli bir slotsa
+            if (target.classList.contains('slot')) {
+                // Eğer slot doluysa, içindeki parçayı havuza geri at (Basit mantık)
+                if (target.children.length > 0) {
+                    poolEl.appendChild(target.children[0]);
+                }
+                target.appendChild(draggedPiece);
+                checkWin();
+            } else if (target.id === 'pieces-pool') {
+                // Havuza geri bırakma
+                target.appendChild(draggedPiece);
+            }
+        }
+
+        // --- MOBİL DOKUNMATİK (Touch Events) ---
+        let initialTouchPos = { x: 0, y: 0 };
+        
+        function handleTouchStart(e) {
+            if (!isGameActive) return;
+            draggedPiece = e.target;
+            let touch = e.touches[0];
+            
+            // Başlangıç pozisyonunu kaydet
+            initialTouchPos.x = touch.clientX;
+            initialTouchPos.y = touch.clientY;
+            
+            // Parçayı görünür şekilde serbest hale getir
+            draggedPiece.style.position = 'fixed';
+            draggedPiece.style.zIndex = '1000';
+            draggedPiece.style.left = touch.clientX - (draggedPiece.offsetWidth / 2) + 'px';
+            draggedPiece.style.top = touch.clientY - (draggedPiece.offsetHeight / 2) + 'px';
+        }
+
+        function handleTouchMove(e) {
+            if (!isGameActive || !draggedPiece) return;
+            e.preventDefault(); // Sayfa kaydırmayı engelle
+            
+            let touch = e.touches[0];
+            draggedPiece.style.left = touch.clientX - (draggedPiece.offsetWidth / 2) + 'px';
+            draggedPiece.style.top = touch.clientY - (draggedPiece.offsetHeight / 2) + 'px';
+        }
+
+        function handleTouchEnd(e) {
+            if (!isGameActive || !draggedPiece) return;
+            
+            // Parmağın kalktığı noktadaki elementi bul
+            // Önce sürüklenen parçayı gizle ki altındakini görebilelim
+            draggedPiece.style.visibility = 'hidden';
+            let touch = e.changedTouches[0];
+            let dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+            draggedPiece.style.visibility = 'visible';
+
+            // Pozisyon özelliklerini sıfırla (Normal akışa dönsün)
+            draggedPiece.style.position = '';
+            draggedPiece.style.zIndex = '';
+            draggedPiece.style.left = '';
+            draggedPiece.style.top = '';
+
+            // Hedef kontrolü
+            if (dropTarget) {
+                // Eğer parçanın üzerine bıraktıysa üst slotu bul
+                if (dropTarget.classList.contains('piece')) {
+                    dropTarget = dropTarget.parentElement;
+                }
+
+                if (dropTarget.classList.contains('slot')) {
+                    if (dropTarget.children.length > 0) {
+                        poolEl.appendChild(dropTarget.children[0]);
+                    }
+                    dropTarget.appendChild(draggedPiece);
+                    checkWin();
+                } else if (dropTarget.id === 'pieces-pool' || dropTarget.closest('#pieces-pool')) {
+                    poolEl.appendChild(draggedPiece);
+                }
+            }
+            draggedPiece = null;
+        }
+
+        // --- KONTROL VE BİTİŞ ---
+        function checkWin() {
+            let correctCount = 0;
+            const slots = document.querySelectorAll('.slot');
+            
+            slots.forEach(slot => {
+                if (slot.children.length > 0) {
+                    const piece = slot.children[0];
+                    if (piece.id === slot.dataset.expected) {
+                        correctCount++;
+                    }
+                }
+            });
+
+            if (correctCount === (ROWS * COLS)) {
+                setTimeout(() => endGame(true), 100);
+            }
+        }
+
+        function endGame(isWin) {
+            isGameActive = false;
+            clearInterval(timerInterval);
+            
+            modalEl.style.display = 'flex';
+            const title = document.getElementById('modal-title');
+            const msg = document.getElementById('modal-message');
+
+            if (isWin) {
+                title.textContent = "Tebrikler!";
+                title.style.color = "green";
+                msg.textContent = `Bulmacayı başarıyla tamamladınız!\nKalan Süre: ${timerEl.textContent}`;
+            } else {
+                title.textContent = "Süre Doldu!";
+                title.style.color = "red";
+                msg.textContent = "Maalesef zaman yetmedi. Tekrar dene!";
+            }
+        }
+
+        // Başlat
+        initGame();
+
+    </script>
+</body>
+</html>
