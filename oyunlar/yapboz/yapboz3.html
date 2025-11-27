@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yapboz Oyunu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 1400px;
+        }
+
+        .start-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .start-screen h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 20px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            min-width: 150px;
+        }
+
+        .difficulty-btn.easy {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+
+        .difficulty-btn.hard {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #333;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .game-screen {
+            display: none;
+            height: calc(100vh - 20px);
+            padding: 10px;
+        }
+
+        .game-header {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+
+        .game-header h2 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 1.5em;
+        }
+
+        .game-content {
+            display: flex;
+            gap: 15px;
+            height: calc(100% - 80px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .target-grid, .pieces-area {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .target-grid {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .pieces-area {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .target-grid h3, .pieces-area h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .grid-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .grid {
+            display: grid;
+            gap: 2px;
+            background: #ddd;
+            border: 3px solid #667eea;
+            margin: 0 auto;
+            width: fit-content;
+        }
+
+        .grid-cell {
+            background: #f5f5f5;
+            border: 2px dashed #ccc;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .grid-cell.filled {
+            border: 2px solid transparent;
+        }
+
+        .pieces-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-content: flex-start;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .puzzle-piece {
+            cursor: move;
+            position: relative;
+            transition: all 0.2s;
+            touch-action: none;
+        }
+
+        .puzzle-piece:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .puzzle-piece.dragging {
+            opacity: 0.5;
+            transform: scale(1.1);
+        }
+
+        .grid-cell.drag-over {
+            background: #e0e7ff;
+            border-color: #667eea;
+        }
+
+        /* Çentikli yapboz parçası şekli */
+        .puzzle-piece canvas, .grid-cell canvas {
+            display: block;
+        }
+
+        .win-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .win-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .win-content h2 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .win-content p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .restart-btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .game-content {
+                flex-direction: column;
+            }
+            
+            .target-grid, .pieces-area {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .start-screen h1 {
+                font-size: 1.8em;
+            }
+            
+            .difficulty-btn {
+                padding: 15px 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="start-screen" id="startScreen">
+            <h1>🧩 Yapboz Oyunu</h1>
+            <p style="margin-bottom: 30px; font-size: 1.1em; color: #666;">Zorluk seviyesini seçin:</p>
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn easy" onclick="startGame(2, 3)">
+                    Kolay<br><small>(2x3)</small>
+                </button>
+                <button class="difficulty-btn hard" onclick="startGame(3, 6)">
+                    Zor<br><small>(3x6)</small>
+                </button>
+            </div>
+        </div>
+
+        <div class="game-screen" id="gameScreen">
+            <div class="game-header">
+                <h2>🧩 Yapboz Oyunu</h2>
+                <p id="difficultyText"></p>
+            </div>
+
+            <div class="game-content">
+                <div class="target-grid">
+                    <h3>Hedef Alan</h3>
+                    <div class="grid-wrapper">
+                        <div class="grid" id="targetGrid"></div>
+                    </div>
+                </div>
+
+                <div class="pieces-area">
+                    <h3>Parçalar</h3>
+                    <div class="pieces-container" id="piecesContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="win-modal" id="winModal">
+        <div class="win-content">
+            <h2>🎉 Tebrikler!</h2>
+            <p>Yapbozu başarıyla tamamladınız!</p>
+            <button class="restart-btn" onclick="resetGame()">Tekrar Oyna</button>
+        </div>
+    </div>
+
+    <script>
+        let rows, cols, pieceWidth, pieceHeight;
+        let correctPlacements = {};
+        let draggedElement = null;
+        let touchStartX, touchStartY;
+        let imageLoaded = false;
+        let puzzleImage = new Image();
+
+        // Resmi önceden yükle
+        puzzleImage.src = 'logo.jpg';
+        puzzleImage.onload = function() {
+            imageLoaded = true;
+        };
+
+        function startGame(r, c) {
+            rows = r;
+            cols = c;
+            
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            document.getElementById('difficultyText').textContent = 
+                `${rows}x${cols} - ${rows * cols} parça`;
+            
+            setTimeout(() => {
+                initGame();
+            }, 100);
+        }
+
+        function initGame() {
+            const targetGrid = document.getElementById('targetGrid');
+            const piecesContainer = document.getElementById('piecesContainer');
+            
+            targetGrid.innerHTML = '';
+            piecesContainer.innerHTML = '';
+            correctPlacements = {};
+            
+            // Ekran boyutuna göre parça boyutunu hesapla
+            const gameContent = document.querySelector('.game-content');
+            const availableWidth = gameContent.offsetWidth / 2 - 60;
+            const availableHeight = gameContent.offsetHeight - 100;
+            
+            // Parça boyutunu hesapla
+            const calculatedWidth = Math.floor(availableWidth / cols);
+            const calculatedHeight = Math.floor(availableHeight / rows);
+            
+            // Daha küçük olanı seç ve minimum/maksimum değerler belirle
+            pieceWidth = Math.max(50, Math.min(calculatedWidth, calculatedHeight, 120));
+            pieceHeight = pieceWidth;
+            
+            targetGrid.style.gridTemplateColumns = `repeat(${cols}, ${pieceWidth}px)`;
+            targetGrid.style.gridTemplateRows = `repeat(${rows}, ${pieceHeight}px)`;
+            
+            // Hedef ızgarayı oluştur
+            for (let i = 0; i < rows * cols; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.dataset.index = i;
+                cell.style.width = pieceWidth + 'px';
+                cell.style.height = pieceHeight + 'px';
+                
+                cell.addEventListener('dragover', handleDragOver);
+                cell.addEventListener('drop', handleDrop);
+                cell.addEventListener('dragleave', handleDragLeave);
+                
+                targetGrid.appendChild(cell);
+            }
+            
+            // Parçaları oluştur ve karıştır
+            const indices = Array.from({length: rows * cols}, (_, i) => i);
+            shuffleArray(indices);
+            
+            if (imageLoaded) {
+                indices.forEach(i => {
+                    const piece = createPuzzlePiece(i);
+                    piecesContainer.appendChild(piece);
+                });
+            } else {
+                puzzleImage.onload = function() {
+                    imageLoaded = true;
+                    indices.forEach(i => {
+                        const piece = createPuzzlePiece(i);
+                        piecesContainer.appendChild(piece);
+                    });
+                };
+            }
+        }
+
+        function createPuzzlePiece(index) {
+            const piece = document.createElement('div');
+            piece.className = 'puzzle-piece';
+            piece.draggable = true;
+            piece.dataset.index = index;
+            
+            const row = Math.floor(index / cols);
+            const col = index % cols;
+            
+            // Canvas oluştur ve çentikli parça çiz
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Canvas boyutunu ayarla (çentikler için ekstra alan)
+            const tabSize = pieceWidth * 0.15;
+            canvas.width = pieceWidth + tabSize * 2;
+            canvas.height = pieceHeight + tabSize * 2;
+            
+            piece.style.width = canvas.width + 'px';
+            piece.style.height = canvas.height + 'px';
+            
+            // Çentikli parça şeklini çiz
+            drawPuzzlePiece(ctx, tabSize, row, col);
+            
+            // Resmi çentikli şeklin içine çiz
+            ctx.globalCompositeOperation = 'source-in';
+            ctx.drawImage(
+                puzzleImage,
+                col * pieceWidth, 
+                row * pieceHeight, 
+                pieceWidth, 
+                pieceHeight,
+                tabSize,
+                tabSize,
+                pieceWidth,
+                pieceHeight
+            );
+            
+            piece.appendChild(canvas);
+            
+            // Desktop drag events
+            piece.addEventListener('dragstart', handleDragStart);
+            piece.addEventListener('dragend', handleDragEnd);
+            
+            // Mobile touch events
+            piece.addEventListener('touchstart', handleTouchStart, {passive: false});
+            piece.addEventListener('touchmove', handleTouchMove, {passive: false});
+            piece.addEventListener('touchend', handleTouchEnd, {passive: false});
+            
+            return piece;
+        }
+
+        function drawPuzzlePiece(ctx, tabSize, row, col) {
+            const w = pieceWidth;
+            const h = pieceHeight;
+            const offset = tabSize;
+            
+            ctx.beginPath();
+            
+            // Sol kenar
+            ctx.moveTo(offset, offset);
+            if (col > 0) {
+                // Sol çentik
+                const tabOut = Math.random() > 0.5;
+                ctx.lineTo(offset, offset + h * 0.3);
+                ctx.bezierCurveTo(
+                    offset + (tabOut ? -tabSize : tabSize), offset + h * 0.3,
+                    offset + (tabOut ? -tabSize : tabSize), offset + h * 0.7,
+                    offset, offset + h * 0.7
+                );
+            }
+            ctx.lineTo(offset, offset + h);
+            
+            // Alt kenar
+            if (row < rows - 1) {
+                // Alt çentik
+                const tabOut = Math.random() > 0.5;
+                ctx.lineTo(offset + w * 0.3, offset + h);
+                ctx.bezierCurveTo(
+                    offset + w * 0.3, offset + h + (tabOut ? tabSize : -tabSize),
+                    offset + w * 0.7, offset + h + (tabOut ? tabSize : -tabSize),
+                    offset + w * 0.7, offset + h
+                );
+            }
+            ctx.lineTo(offset + w, offset + h);
+            
+            // Sağ kenar
+            if (col < cols - 1) {
+                // Sağ çentik
+                const tabOut = Math.random() > 0.5;
+                ctx.lineTo(offset + w, offset + h * 0.7);
+                ctx.bezierCurveTo(
+                    offset + w + (tabOut ? tabSize : -tabSize), offset + h * 0.7,
+                    offset + w + (tabOut ? tabSize : -tabSize), offset + h * 0.3,
+                    offset + w, offset + h * 0.3
+                );
+            }
+            ctx.lineTo(offset + w, offset);
+            
+            // Üst kenar
+            if (row > 0) {
+                // Üst çentik
+                const tabOut = Math.random() > 0.5;
+                ctx.lineTo(offset + w * 0.7, offset);
+                ctx.bezierCurveTo(
+                    offset + w * 0.7, offset + (tabOut ? -tabSize : tabSize),
+                    offset + w * 0.3, offset + (tabOut ? -tabSize : tabSize),
+                    offset + w * 0.3, offset
+                );
+            }
+            
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function handleDragStart(e) {
+            draggedElement = e.target.closest('.puzzle-piece');
+            draggedElement.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            e.target.closest('.puzzle-piece').classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            const cell = e.currentTarget;
+            
+            if (cell.children.length === 0) {
+                const piece = draggedElement;
+                cell.appendChild(piece);
+                cell.classList.add('filled');
+                
+                const pieceIndex = parseInt(piece.dataset.index);
+                const cellIndex = parseInt(cell.dataset.index);
+                
+                correctPlacements[cellIndex] = pieceIndex;
+                
+                checkWin();
+            }
+        }
+
+        // Touch events for mobile
+        function handleTouchStart(e) {
+            e.preventDefault();
+            draggedElement = e.target.closest('.puzzle-piece');
+            draggedElement.classList.add('dragging');
+            
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            
+            draggedElement.style.position = 'fixed';
+            draggedElement.style.zIndex = '1000';
+            updateTouchPosition(touch.clientX, touch.clientY);
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!draggedElement) return;
+            
+            const touch = e.touches[0];
+            updateTouchPosition(touch.clientX, touch.clientY);
+        }
+
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            if (!draggedElement) return;
+            
+            const touch = e.changedTouches[0];
+            const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            draggedElement.style.position = '';
+            draggedElement.style.zIndex = '';
+            draggedElement.style.left = '';
+            draggedElement.style.top = '';
+            draggedElement.style.transform = '';
+            draggedElement.classList.remove('dragging');
+            
+            const gridCell = dropTarget?.closest('.grid-cell');
+            
+            if (gridCell && gridCell.children.length === 0) {
+                gridCell.appendChild(draggedElement);
+                gridCell.classList.add('filled');
+                
+                const pieceIndex = parseInt(draggedElement.dataset.index);
+                const cellIndex = parseInt(gridCell.dataset.index);
+                
+                correctPlacements[cellIndex] = pieceIndex;
+                
+                checkWin();
+            }
+            
+            draggedElement = null;
+        }
+
+        function updateTouchPosition(x, y) {
+            if (!draggedElement) return;
+            const rect = draggedElement.getBoundingClientRect();
+            draggedElement.style.left = (x - rect.width / 2) + 'px';
+            draggedElement.style.top = (y - rect.height / 2) + 'px';
+        }
+
+        function checkWin() {
+            if (Object.keys(correctPlacements).length === rows * cols) {
+                let allCorrect = true;
+                for (let i = 0; i < rows * cols; i++) {
+                    if (correctPlacements[i] !== i) {
+                        allCorrect = false;
+                        break;
+                    }
+                }
+                
+                if (allCorrect) {
+                    setTimeout(() => {
+                        document.getElementById('winModal').style.display = 'flex';
+                    }, 300);
+                }
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function resetGame() {
+            document.getElementById('winModal').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+        }
+
+        // Pencere boyutu değiştiğinde oyunu yeniden başlat
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (document.getElementById('gameScreen').style.display === 'block') {
+                    initGame();
+                }
+            }, 250);
+        });
+    </script>
+</body>
+</html>
