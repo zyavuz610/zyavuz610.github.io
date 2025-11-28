@@ -470,6 +470,12 @@
             return piece;
         }
 
+        // Tutarlı çentik oluşturmak için seed-based random
+        function seededRandom(seed) {
+            const x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
+        }
+
         function drawPuzzlePiece(ctx, tabSize, row, col) {
             const w = pieceWidth;
             const h = pieceHeight;
@@ -480,8 +486,8 @@
             // Sol kenar
             ctx.moveTo(offset, offset);
             if (col > 0) {
-                // Sol çentik
-                const tabOut = Math.random() > 0.5;
+                // Sol çentik - tutarlı
+                const tabOut = seededRandom(row * 1000 + col * 100 + 1) > 0.5;
                 ctx.lineTo(offset, offset + h * 0.3);
                 ctx.bezierCurveTo(
                     offset + (tabOut ? -tabSize : tabSize), offset + h * 0.3,
@@ -493,8 +499,8 @@
             
             // Alt kenar
             if (row < rows - 1) {
-                // Alt çentik
-                const tabOut = Math.random() > 0.5;
+                // Alt çentik - tutarlı
+                const tabOut = seededRandom(row * 1000 + col * 100 + 2) > 0.5;
                 ctx.lineTo(offset + w * 0.3, offset + h);
                 ctx.bezierCurveTo(
                     offset + w * 0.3, offset + h + (tabOut ? tabSize : -tabSize),
@@ -506,8 +512,8 @@
             
             // Sağ kenar
             if (col < cols - 1) {
-                // Sağ çentik
-                const tabOut = Math.random() > 0.5;
+                // Sağ çentik - tutarlı
+                const tabOut = seededRandom(row * 1000 + col * 100 + 3) > 0.5;
                 ctx.lineTo(offset + w, offset + h * 0.7);
                 ctx.bezierCurveTo(
                     offset + w + (tabOut ? tabSize : -tabSize), offset + h * 0.7,
@@ -519,8 +525,8 @@
             
             // Üst kenar
             if (row > 0) {
-                // Üst çentik
-                const tabOut = Math.random() > 0.5;
+                // Üst çentik - tutarlı
+                const tabOut = seededRandom(row * 1000 + col * 100 + 4) > 0.5;
                 ctx.lineTo(offset + w * 0.7, offset);
                 ctx.bezierCurveTo(
                     offset + w * 0.7, offset + (tabOut ? -tabSize : tabSize),
