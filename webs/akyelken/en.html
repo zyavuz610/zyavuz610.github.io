@@ -9,61 +9,83 @@
     <style>
         :root { --main-blue: #003366; }
         .hero-section {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1500514960763-88981ef4c329?auto=format&fit=crop&q=80&w=1920');
-            background-size: cover; height: 60vh; color: white; display: flex; align-items: center; text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover; background-position: center; height: 70vh; 
+            color: white; display: flex; align-items: center; justify-content: center; text-align: center;
         }
-        .btn-instagram { background-color: #E1306C; color: white; }
-        .map-box { border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .btn-instagram { background-color: #E1306C; color: white; border: none; }
+        .btn-instagram:hover { background-color: #b32656; color: white; }
+        .map-box { border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #ddd; }
+        .navbar { background-color: var(--main-blue) !important; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--main-blue);">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="en.html">AKYAZI SAILING</a>
-            <div class="ms-auto">
-                <a href="index.html" class="btn btn-outline-light btn-sm me-2">Türkçe</a>
-                <a href="https://www.instagram.com/akyaziyelken/" target="_blank" class="btn btn-instagram btn-sm"><i class="fab fa-instagram"></i> Follow Us</a>
+            <a class="navbar-brand fw-bold" href="en.html">AKYAZI SAILING CLUB</a>
+            <div class="ms-auto d-flex align-items-center">
+                <a href="index.html" class="btn btn-outline-light btn-sm me-3">Türkçe <i class="fas fa-globe ms-1"></i></a>
+                <a href="https://www.instagram.com/akyaziyelken/" target="_blank" class="btn btn-instagram btn-sm d-none d-md-block">
+                    <i class="fab fa-instagram me-1"></i> Follow Us
+                </a>
             </div>
         </div>
     </nav>
 
     <header class="hero-section">
         <div class="container">
-            <h1 class="display-4 fw-bold">Meet the Sea</h1>
-            <p class="lead">In the heart of Trabzon, we take the wind by our side.</p>
+            <h1 class="display-3 fw-bold mb-3">Your Meeting Point with the Sea</h1>
+            <p class="lead fs-3">In the heart of Trabzon, we take the wind with us.</p>
+            <a href="https://www.instagram.com/akyaziyelken/" target="_blank" class="btn btn-instagram btn-lg mt-4 d-md-none">
+                <i class="fab fa-instagram me-1"></i> Follow on Instagram
+            </a>
         </div>
     </header>
 
-    <section class="py-5 container">
-        <div class="row g-4">
-            <div class="col-md-6">
-                <h2 class="mb-3">Our Mission</h2>
-                <p>We are here to encourage the people of Trabzon—a historic maritime city—to form a closer bond with the sea. We set sail to the blue waters by discovering the power of nature and wind.</p>
-                <h4 class="mt-4">What We Do?</h4>
-                <ul class="list-unstyled">
-                    <li><i class="fas fa-anchor text-primary me-2"></i> Professional Sailing Trainings</li>
-                    <li><i class="fas fa-trophy text-primary me-2"></i> Exciting Sailing Regattas</li>
-                    <li><i class="fas fa-users text-primary me-2"></i> Social Events for Sea Lovers</li>
-                </ul>
+    <main class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <h2 class="display-6 fw-bold text-primary mb-4">Our Mission & Activities</h2>
+                <p class="lead">We are here to encourage the people of Trabzon—a historic maritime city—to form a closer bond with the sea.</p>
+                <p>We set sail to the blue waters by discovering the power of nature and wind. We organize events for all levels within our club:</p>
+                
+                <div class="mt-4">
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="fas fa-anchor text-primary fs-4 me-3 mt-1"></i>
+                        <div><strong>Professional Sailing Trainings:</strong> Learn the fundamentals of seamanship with expert instructors.</div>
+                    </div>
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="fas fa-trophy text-warning fs-4 me-3 mt-1"></i>
+                        <div><strong>Exciting Regattas:</strong> Experience competition in the wild waters of the Black Sea.</div>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-users text-info fs-4 me-3 mt-1"></i>
+                        <div><strong>Social Gatherings:</strong> Become part of a large family sharing the love of the sea.</div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <div class="map-box">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.666993181816!2d39.64571161217036!3d41.00030097123382!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4064390000000001%3A0x6e9a0e6b8c9f5f0!2sSenol%20Gunes%20Spor%20Kompleksi!5e0!3m2!1sen!2str!4v1700000000000" 
-                        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                    <div class="p-3 bg-white">
-                        <p class="small mb-2"><strong>Address:</strong> Senol Gunes Sports Complex, Stadium Entrance, Ortahisar/Trabzon</p>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=41.0003,39.6457" target="_blank" class="btn btn-primary w-100">
-                            <i class="fas fa-directions"></i> Get Directions
+
+            <div class="col-lg-6">
+                <div class="map-box h-100 bg-light">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3012.285854898144!2d39.64351137666244!3d41.0003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40643714652277cb%3A0xc3f95b58ed54070a!2sŞenol%20Güneş%20Spor%20Kompleksi!5e0!3m2!1sen!2str!4v1710000000000!5m2!1sen!2str" 
+                        width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <div class="p-4 bg-white border-top">
+                        <p class="mb-3"><i class="fas fa-map-marker-alt text-danger me-2"></i> Şenol Güneş Sports Complex Stadium Entrance, 61195 Ortahisar/Trabzon</p>
+                        <a href="https://www.google.com/maps/dir//Akyaz%C4%B1+Yelken+Kul%C3%BCb%C3%BC" target="_blank" class="btn btn-primary btn-lg w-100 shadow">
+                            <i class="fas fa-directions me-2"></i> Get Directions
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <footer class="bg-dark text-white py-4 text-center">
-        <p>© 2025 Akyazı Sailing Club</p>
+        <div class="container">
+            <p class="mb-0">© 2025 Akyazı Sailing Club. All Rights Reserved.</p>
+        </div>
     </footer>
 
 </body>
