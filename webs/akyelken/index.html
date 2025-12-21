@@ -7,121 +7,64 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --main-blue: #003366; --sea-blue: #0077b6; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .navbar { background-color: var(--main-blue); }
+        :root { --main-blue: #003366; }
         .hero-section {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover; background-position: center; height: 80vh;
-            color: white; display: flex; align-items: center; justify-content: center; text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1500514960763-88981ef4c329?auto=format&fit=crop&q=80&w=1920');
+            background-size: cover; height: 60vh; color: white; display: flex; align-items: center; text-align: center;
         }
-        .btn-instagram { background-color: #E1306C; color: white; transition: 0.3s; }
-        .btn-instagram:hover { background-color: #b32656; color: white; }
-        .section-padding { padding: 80px 0; }
-        .map-container { position: relative; height: 400px; width: 100%; }
-        footer { background: #222; color: white; padding: 20px 0; }
+        .btn-instagram { background-color: #E1306C; color: white; }
+        .map-box { border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--main-blue);">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">AKYAZI YELKEN KULÜBÜ</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#tr">TR</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#en">EN</a></li>
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-instagram btn-sm" href="https://www.instagram.com/akyaziyelken/" target="_blank">
-                            <i class="fab fa-instagram"></i> Takip Et / Follow
-                        </a>
-                    </li>
-                </ul>
+            <a class="navbar-brand fw-bold" href="index.html">AKYAZI YELKEN</a>
+            <div class="ms-auto">
+                <a href="en.html" class="btn btn-outline-light btn-sm me-2">English</a>
+                <a href="https://www.instagram.com/akyaziyelken/" target="_blank" class="btn btn-instagram btn-sm"><i class="fab fa-instagram"></i> Takip Et</a>
             </div>
         </div>
     </nav>
 
-    <div id="tr">
-        <header class="hero-section">
-            <div class="container">
-                <h1 class="display-3 fw-bold">Denizle Buluşma Noktanız</h1>
-                <p class="lead">Trabzon'un kalbinde, rüzgarı yanımıza alıyoruz.</p>
-                <a href="#hakkimizda-tr" class="btn btn-primary btn-lg mt-3">Keşfet</a>
-            </div>
-        </header>
+    <header class="hero-section">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Denizle Buluşma Noktanız</h1>
+            <p class="lead">Trabzon'un kalbinde, rüzgarı yanımıza alıyoruz.</p>
+        </div>
+    </header>
 
-        <section id="hakkimizda-tr" class="section-padding container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h2 class="mb-4">Hakkımızda</h2>
-                    <p><strong>Akyazı Yelken Kulübü</strong> olarak temel amacımız, bir deniz şehri olan Trabzon halkını denizle daha yakın bir bağ kurmaya teşvik etmektir.</p>
-                    <p>Doğayla iç içe, rüzgarın gücünü hissederek Trabzon'un maviliklerini herkes için ulaşılabilir kılıyoruz.</p>
-                </div>
-                <div class="col-md-6">
-                    <div class="card border-0 shadow-sm p-4">
-                        <h4>Neler Yapıyoruz?</h4>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Profesyonel Yelken Eğitimleri</li>
-                            <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Heyecan Dolu Yelken Yarışmaları</li>
-                            <li class="list-group-item"><i class="fas fa-check text-success me-2"></i> Deniz Tutkunları İçin Sosyal Etkinlikler</li>
-                        </ul>
+    <section class="py-5 container">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <h2 class="mb-3">Amacımız</h2>
+                <p>Bir deniz şehri olan Trabzon halkını denizle daha yakın bir bağ kurmaya teşvik etmek için buradayız. Doğanın ve rüzgarın gücünü keşfederek maviliklere yelken açıyoruz.</p>
+                <h4 class="mt-4">Neler Yapıyoruz?</h4>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check-circle text-primary me-2"></i> Profesyonel Yelken Eğitimleri</li>
+                    <li><i class="fas fa-check-circle text-primary me-2"></i> Heyecan Dolu Yarışmalar</li>
+                    <li><i class="fas fa-check-circle text-primary me-2"></i> Deniz Tutkunları İçin Sosyal Etkinlikler</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="map-box">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.666993181816!2d39.64571161217036!3d41.00030097123382!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4064390000000001%3A0x6e9a0e6b8c9f5f0!2sSenol%20Gunes%20Spor%20Kompleksi!5e0!3m2!1str!2str!4v1700000000000" 
+                        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <div class="p-3 bg-white">
+                        <p class="small mb-2"><strong>Adres:</strong> Şenol Güneş Spor Kompleksi, Stad Girişi, Ortahisar/Trabzon</p>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=41.0003,39.6457" target="_blank" class="btn btn-primary w-100">
+                            <i class="fas fa-directions"></i> Yol Tarifi Al
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
-
-    <hr class="container">
-
-    <div id="en" class="bg-light">
-        <section class="section-padding container">
-            <div class="row align-items-center">
-                <div class="col-md-6 order-md-2">
-                    <h2 class="mb-4">About Us</h2>
-                    <p>Our mission at <strong>Akyazı Sailing Club</strong> is to reconnect the people of Trabzon—a historic maritime city—with the sea.</p>
-                    <p>We aim to make the blue waters of Trabzon accessible to everyone by embracing the power of the wind and the harmony of nature.</p>
-                </div>
-                <div class="col-md-6 order-md-1">
-                    <div class="card border-0 shadow-sm p-4">
-                        <h4>Our Activities</h4>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><i class="fas fa-anchor text-primary me-2"></i> Professional Sailing Trainings</li>
-                            <li class="list-group-item"><i class="fas fa-trophy text-primary me-2"></i> Competitive Sailing Regattas</li>
-                            <li class="list-group-item"><i class="fas fa-users text-primary me-2"></i> Social Events for Sea Lovers</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <section class="section-padding container">
-        <div class="text-center mb-5">
-            <h2>Bize Ulaşın / Contact Us</h2>
-            <p><i class="fas fa-map-marker-alt"></i> Şenol Güneş Spor Kompleksi Medical Park Stadyumu girişi, 61195 Ortahisar/Trabzon</p>
-        </div>
-        <div class="row">
-            <div class="col-12 shadow rounded overflow-hidden" style="height: 450px;">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3009.645064563821!2d39.65175631541541!3d41.00012197930114!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40643da46924843d%3A0x696803264c92550c!2zxZhlbm9sIEfDvG5lyZ8gU3BvciBLb21wbGVrc2k!5e0!3m2!1str!2str!4v1690000000000!5m2!1str!2str" 
-                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-        </div>
-        <div class="text-center mt-5">
-            <a href="https://www.instagram.com/akyaziyelken/" target="_blank" class="btn btn-instagram btn-lg">
-                <i class="fab fa-instagram"></i> Instagram'da Bizi Takip Edin
-            </a>
         </div>
     </section>
 
-    <footer>
-        <div class="container text-center">
-            <p>&copy; 2024 Akyazı Yelken Kulübü. Tüm Hakları Saklıdır.</p>
-        </div>
+    <footer class="bg-dark text-white py-4 text-center">
+        <p>© 2025 Akyazı Yelken Kulübü</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
