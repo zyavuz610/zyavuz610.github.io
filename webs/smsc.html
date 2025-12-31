@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Hesaplayıcı</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin-top: 50px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+        textarea {
+            resize: none;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .info-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .stat {
+            text-align: center;
+            padding: 15px;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .warning-text {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0 text-center">📱 SMS Hesaplayıcı</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="firstSmsLimit" class="form-label fw-bold">İlk SMS Limiti:</label>
+                        <input 
+                            type="number" 
+                            class="form-control" 
+                            id="firstSmsLimit" 
+                            value="160" 
+                            min="1" 
+                            max="999"
+                            oninput="calculateSMS()">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="nextSmsLimit" class="form-label fw-bold">Sonraki SMS Limiti:</label>
+                        <input 
+                            type="number" 
+                            class="form-control" 
+                            id="nextSmsLimit" 
+                            value="153" 
+                            min="1" 
+                            max="999"
+                            oninput="calculateSMS()">
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="smsText" class="form-label fw-bold">Mesajınızı yazın:</label>
+                    <textarea 
+                        class="form-control" 
+                        id="smsText" 
+                        rows="8" 
+                        placeholder="Mesajınızı buraya yazın..."
+                        oninput="calculateSMS()"></textarea>
+                </div>
+                
+                <div class="info-box">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="stat">
+                                <div class="stat-value" id="charCount">0</div>
+                                <div class="stat-label">Karakter</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat">
+                                <div class="stat-value" id="doubleCharCount">0</div>
+                                <div class="stat-label">2'lik Karakter</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat">
+                                <div class="stat-value" id="smsCount">0</div>
+                                <div class="stat-label">SMS</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat">
+                                <div class="stat-value" id="remainingChars">160</div>
+                                <div class="stat-label">Kalan</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="warningMessage" class="warning-text text-center" style="display: none;">
+                        ⚠️ Türkçe karakter kullanımı SMS limitini azaltır
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <button class="btn btn-outline-secondary btn-sm w-100" onclick="clearText()">
+                        Temizle
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Türkçe karakterler (GSM 7-bit alfabesinde olmayan karakterler)
+        const turkishChars = ['ç', 'Ç', 'ğ', 'Ğ', 'ı', 'İ', 'ö', 'Ö', 'ş', 'Ş', 'ü', 'Ü'];
+        
+        // GSM 7-bit alfabesinde escape karakteri gerektiren karakterler
+        const escapeChars = ['^', '{', '}', '\\', '[', ']', '~', '|', '€'];
+
+        function calculateSMS() {
+            const text = document.getElementById('smsText').value;
+            let actualCharCount = text.length; // Gerçek karakter sayısı
+            let doubleCharCount = 0; // 2'lik karakter sayısı
+            
+            // Kullanıcının girdiği limitler
+            const FIRST_SMS_LIMIT = parseInt(document.getElementById('firstSmsLimit').value) || 160;
+            const NEXT_SMS_LIMIT = parseInt(document.getElementById('nextSmsLimit').value) || 153;
+
+            // Karakterleri kontrol et ve 2'lik karakterleri say
+            for (let char of text) {
+                if (turkishChars.includes(char) || escapeChars.includes(char)) {
+                    doubleCharCount++;
+                }
+            }
+
+            // SMS karakter sayısı: gerçek karakter + 2'lik karakter sayısı
+            let totalSMSChars = actualCharCount + doubleCharCount;
+
+            // SMS hesaplama - global değişkenler kullanarak
+            let smsCount, remainingChars;
+            
+            if (totalSMSChars === 0) {
+                smsCount = 0;
+                remainingChars = FIRST_SMS_LIMIT;
+            } else if (totalSMSChars <= FIRST_SMS_LIMIT) {
+                smsCount = 1;
+                remainingChars = FIRST_SMS_LIMIT - totalSMSChars;
+            } else {
+                // İlk SMS limitinden fazlaysa, sonraki SMS limitine göre böl
+                smsCount = 1 + Math.ceil((totalSMSChars - FIRST_SMS_LIMIT) / NEXT_SMS_LIMIT);
+                let totalCapacity = FIRST_SMS_LIMIT + ((smsCount - 1) * NEXT_SMS_LIMIT);
+                remainingChars = totalCapacity - totalSMSChars;
+            }
+
+            // Uyarı mesajı
+            if (doubleCharCount > 0) {
+                document.getElementById('warningMessage').style.display = 'block';
+            } else {
+                document.getElementById('warningMessage').style.display = 'none';
+            }
+
+            // Değerleri güncelle
+            document.getElementById('charCount').textContent = totalSMSChars;
+            document.getElementById('doubleCharCount').textContent = doubleCharCount;
+            document.getElementById('smsCount').textContent = smsCount;
+            document.getElementById('remainingChars').textContent = remainingChars;
+
+            // Renk güncellemeleri
+            const smsCountElement = document.getElementById('smsCount');
+            if (smsCount > 3) {
+                smsCountElement.style.color = '#dc3545';
+            } else if (smsCount > 1) {
+                smsCountElement.style.color = '#ffc107';
+            } else {
+                smsCountElement.style.color = '#667eea';
+            }
+        }
+
+        function clearText() {
+            document.getElementById('smsText').value = '';
+            calculateSMS();
+        }
+
+        // Sayfa yüklendiğinde başlangıç değerlerini ayarla
+        calculateSMS();
+    </script>
+</body>
+</html>
