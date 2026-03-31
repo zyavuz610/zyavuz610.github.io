@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akıllı Kur'an Sözlüğü | Prototip</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --green-dark:#1a4d2e; --green-mid:#4f6f52; --green-pale:#e9edc9; }
+        body { font-family:'Inter',sans-serif; background:#f8f9fa; color:#333; }
+        .arabic    { font-family:'Amiri',serif; font-size:1.5rem; }
+        .arabic-sm { font-family:'Amiri',serif; font-size:1.1rem; }
+        .navbar { background:var(--green-dark); }
+        .hero-section { background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%); color:white; padding:60px 0; }
+        .search-box { border-radius:50px; padding:15px 25px; border:none; box-shadow:0 4px 15px rgba(0,0,0,.1); }
+        .footer-note { background:#343a40; color:#adb5bd; padding:20px 0; font-size:.9rem; }
+        .ai-badge { background:#6c5ce7; color:white; padding:2px 10px; border-radius:10px; font-size:.7rem; }
+
+        /* kaynak etiketleri */
+        .src-quran  { background:#d4edda; color:#155724; font-size:.7rem; font-weight:700; padding:2px 7px; border-radius:7px; white-space:nowrap; }
+        .src-hadis  { background:#cce5ff; color:#004085; font-size:.7rem; font-weight:700; padding:2px 7px; border-radius:7px; white-space:nowrap; }
+        .src-siir   { background:#fff3cd; color:#856404; font-size:.7rem; font-weight:700; padding:2px 7px; border-radius:7px; white-space:nowrap; }
+        .src-hikmet { background:#f8d7da; color:#721c24; font-size:.7rem; font-weight:700; padding:2px 7px; border-radius:7px; white-space:nowrap; }
+
+        /* Grid kartlar (ilk 4) */
+        .g-card { border:none; border-radius:16px; background:white; box-shadow:0 2px 12px rgba(0,0,0,.07); overflow:hidden; height:100%; transition:transform .25s,box-shadow .25s; }
+        .g-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.13); }
+        .g-card.hl { border-left:4px solid #ff9f1c; }
+        .g-card-img { width:100%; height:140px; object-fit:cover; display:block; background:#eee; }
+        .g-card-ph  { width:100%; height:140px; background:linear-gradient(135deg,#e9edc9,#c8dda0); display:flex; align-items:center; justify-content:center; font-size:2.2rem; color:var(--green-dark); opacity:.55; }
+        .g-card-body { padding:13px 15px 15px; }
+
+        /* Slider bölüm */
+        .slider-wrap { overflow:hidden; }
+        .slider-track { display:flex; gap:16px; transition:transform .4s cubic-bezier(.4,0,.2,1); }
+        .s-card { flex:0 0 290px; border:none; border-radius:16px; background:white; box-shadow:0 2px 12px rgba(0,0,0,.07); overflow:hidden; transition:transform .25s; }
+        .s-card:hover { transform:translateY(-3px); }
+        .s-card.hl { border-left:4px solid #ff9f1c; }
+        .s-card-img { width:100%; height:118px; object-fit:cover; display:block; background:#eee; }
+        .s-card-ph  { width:100%; height:118px; background:linear-gradient(135deg,#e9edc9,#c8dda0); display:flex; align-items:center; justify-content:center; font-size:2rem; color:var(--green-dark); opacity:.55; }
+        .s-card-body { padding:11px 13px 13px; }
+
+        .nav-btn { background:var(--green-dark); color:white; border:none; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:.2s; font-size:.85rem; flex-shrink:0; }
+        .nav-btn:hover { background:var(--green-mid); }
+        .nav-btn:disabled { background:#ccc; cursor:default; }
+
+        .badge-ctx { background:var(--green-pale); color:var(--green-dark); font-weight:600; font-size:.7rem; }
+        .plural-box { background:#f0f4f8; border-radius:10px; padding:5px 14px; display:inline-flex; gap:14px; align-items:center; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="fa-solid fa-microchip me-2"></i>
+            <strong>Akıllı Kur'an Sözlüğü</strong> <small class="ms-2 opacity-75">SÖZLUK v1</small>
+        </a>
+        <div class="d-flex gap-2">
+            <a href="en.html" class="btn btn-outline-light btn-sm fw-bold">English</a>
+            <a href="ar.html" class="btn btn-outline-light btn-sm fw-bold">العربية</a>
+        </div>
+    </div>
+</nav>
+
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-5 fw-bold mb-4">Kur'an Kelimelerinin Derinliğini Keşfedin</h1>
+        <p class="lead mb-5">Yapay zekâ ile bağlamsal, dilsel ve pragmatik anlam analizi.</p>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="input-group mb-3">
+                    <input type="text" id="searchInput" class="form-control search-box"
+                        placeholder="Kelime veya kök arayın... (Örn: kitab, beyt)"
+                        onkeydown="if(event.key==='Enter') showResult()">
+                    <button class="btn btn-warning rounded-pill px-4 ms-2 shadow" onclick="showResult()">
+                        <i class="fa-solid fa-magnifying-glass me-2"></i>Ara
+                    </button>
+                </div>
+                <div class="d-flex gap-2 justify-content-center flex-wrap mt-2">
+                    <small class="text-white-50">Dene:</small>
+                    <button class="btn btn-outline-light btn-sm rounded-pill" onclick="quickSearch('kitab')">Kitâb</button>
+                    <button class="btn btn-outline-light btn-sm rounded-pill" onclick="quickSearch('beyt')">Beyt</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SONUÇ -->
+<div class="container my-5" id="resultArea" style="display:none;">
+
+    <div class="row mb-3">
+        <div class="col-12 border-bottom pb-2">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <h2 class="mb-0" id="res-title"></h2>
+                <span class="arabic text-muted" id="res-arabic"></span>
+                <span class="badge bg-secondary" id="res-root"></span>
+                <span class="ai-badge"><i class="fa-solid fa-robot me-1"></i>AI ANALİZİ AKTİF</span>
+            </div>
+            <div class="mt-2" id="res-plurals-wrap" style="display:none;">
+                <small class="text-muted me-2">Çoğul:</small>
+                <span class="plural-box" id="res-plurals"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bağlam sayacı -->
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <span class="badge rounded-pill fw-bold" style="background:var(--green-dark);font-size:.85rem;" id="ctx-badge"></span>
+        <small class="text-muted">farklı anlam / bağlam tespit edildi</small>
+    </div>
+
+    <!-- İlk 4 grid -->
+    <div class="row g-3" id="grid-area"></div>
+
+    <!-- Kalan slider -->
+    <div id="slider-section" style="display:none;" class="mt-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="mb-0 fw-semibold text-secondary">
+                <i class="fa-solid fa-layer-group me-2"></i>Diğer Bağlamlar
+            </h5>
+            <div class="d-flex align-items-center gap-2">
+                <button class="nav-btn" id="btn-prev" onclick="slide(-1)" disabled>
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <small class="text-muted text-center" id="slide-lbl" style="min-width:52px;"></small>
+                <button class="nav-btn" id="btn-next" onclick="slide(1)">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="slider-wrap">
+            <div class="slider-track" id="slider-track"></div>
+        </div>
+    </div>
+
+    <!-- Analiz -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="p-4 bg-white rounded shadow-sm border">
+                <h4><i class="fa-solid fa-gears me-2 text-primary"></i>Dilsel ve Akıllı Analiz (AI)</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>Kullanım Sıklığı</h6>
+                        <div class="progress mb-2" style="height:10px;">
+                            <div class="progress-bar bg-success" id="res-freq-bar"></div>
+                        </div>
+                        <small class="text-muted" id="res-freq-text"></small>
+                    </div>
+                    <div class="col-md-8 border-start">
+                        <h6>Eşdizimlilik (Collocation)</h6>
+                        <div id="res-collocations"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5 text-center" id="initialMessage">
+    <div class="p-5 bg-white rounded shadow-sm">
+        <i class="fa-solid fa-keyboard fa-3x text-muted mb-3"></i>
+        <h3>Arama Başlatın</h3>
+        <p class="text-muted">Arama yaparak sistemin kelimeleri bağlamlarına göre nasıl ayrıştırdığını görün.</p>
+        <p class="text-muted small">Şu an aranabilir: <strong>Kitâb</strong>, <strong>Beyt</strong></p>
+    </div>
+</div>
+
+<footer class="footer-note text-center">
+    <div class="container">
+        <p class="mb-1"><strong>ÖNEMLİ NOT:</strong></p>
+        <p class="mb-0">Bu sayfa bir <strong>deneme projesidir (prototip)</strong></p>
+        <hr class="bg-light opacity-25">
+        <div class="small">© 2026 | Dr. Zafer YAVUZ ve Ekibi | Karadeniz Teknik Üniversitesi</div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+/* ================================================================
+   KELİME VERİ TABANI
+   Her bağlam için "image" alanı:
+     url  – Wikimedia Commons / açık lisanslı doğrudan görsel linki
+     alt  – alternatif metin
+     icon – URL yüklenemezse gösterilecek FA ikonu
+   ================================================================ */
+
+const WORDS = {
+
+    /* ── KİTÂB ── */
+    kitab: {
+        title:"Kitâb", arabic:"كِتَاب", root:"Kök: K-T-B",
+        plurals:[{arabic:"كُتُب",transliteration:"Kutub"},{arabic:"أَكْتَاب",transliteration:"Ektâb"}],
+        frequency:{percent:85,label:"Kur'an'da 261 kez geçer."},
+        collocations:["Kitâbun Mübîn","Ehl-i Kitâb","Ümmü'l Kitâb"],
+        contexts:[
+            {
+                label:"Vahyedilen Kitap", sourceType:"quran",
+                reference:"Bakara 2:2 — «Zâlikel kitâbu lâ reybe fîh...»",
+                title:"Kur'an-ı Kerim / İlahi Vahiy",
+                description:"Bu bağlamda kelime, Allah tarafından indirilen rehber ve kutsal metni ifade eder.",
+                highlight:false,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Quran_Kareem.jpg/320px-Quran_Kareem.jpg",alt:"Kur'an-ı Kerim",icon:"fa-book-open"}
+            },
+            {
+                label:"Kader / Hüküm", sourceType:"quran",
+                reference:"Enfal 8:68 — «Lev lâ kitâbun minallâhi sebeka...»",
+                title:"Yazılı Hüküm / Kader / Kanun",
+                description:"Kelime burada fiziksel bir kitaptan ziyade, Allah'ın takdiri veya ezeli hükmü anlamına gelmektedir.",
+                highlight:true,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Ottoman_calligraphy_Allah.jpg/320px-Ottoman_calligraphy_Allah.jpg",alt:"İslam hat sanatı",icon:"fa-scroll"}
+            }
+        ]
+    },
+
+    /* ── BEYT ── */
+    beyt: {
+        title:"Beyt", arabic:"بَيْت", root:"Kök: B-Y-T",
+        plurals:[{arabic:"بُيُوت",transliteration:"Buyût"},{arabic:"أَبْيَات",transliteration:"Ebyât"}],
+        frequency:{percent:72,label:"Kur'an'da 70'ten fazla farklı türevle geçer."},
+        collocations:["Ehlü'l-Beyt","Beytullâh","Beytü'l-Makdis","Beytü'l-Mâl","el-Beytü'l-Harâm"],
+        contexts:[
+            /* — İlk 4: grid'de görünür — */
+            {
+                label:"1. Mesken / Barınak", sourceType:"quran",
+                reference:"Nuh 71:28",
+                title:"Mesken — İkamet İçin Hazırlanmış Yer",
+                description:"Temel anlam: barınma ve oturmak üzere hazırlanmış mekân. Sıradan konut kastedilir.",
+                highlight:false,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Traditional-courtyard-house.jpg/320px-Traditional-courtyard-house.jpg",alt:"Geleneksel avlulu ev",icon:"fa-house"}
+            },
+            {
+                label:"2. Ehl-i Beyt (1) — Peygamberin Ailesi", sourceType:"quran",
+                reference:"Ahzab 33:33",
+                title:"Ehl-i Beyt — Hz. Peygamber'in Ailesi",
+                description:"Burada Beyt, Hz. Peygamber'in kutsal hanesini simgeler. 'Ehl-i Beyt' tabiri özel anlam kazanmıştır.",
+                highlight:true,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Rawdat_al-Sharif.jpg/320px-Rawdat_al-Sharif.jpg",alt:"Hz. Peygamberin türbesi",icon:"fa-mosque"}
+            },
+            {
+                label:"3. Ehl-i Beyt (2) — Erkeğin Ailesi", sourceType:"quran",
+                reference:"Kasas 28:12",
+                title:"Ehl-i Beyt (2) — Erkeğin Bakmakla Yükümlü Olduğu Kişiler",
+                description:"Bu kullanımda Beyt; erkeğin evi ve bakmakla yükümlü olduğu aile bireylerini kapsar.",
+                highlight:false,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Muslim_Family.jpg/320px-Muslim_Family.jpg",alt:"Müslüman aile",icon:"fa-people-roof"}
+            },
+            {
+                label:"4. Beytü'ş-Şi'r — Şiir Beyti", sourceType:"siir",
+                reference:"Aruz ve kafiye ilmi",
+                title:"Şiir Beyti — Aruz Ölçüsüyle İki Mısra",
+                description:"Arapça şiirde 'beyt', iki mısradan oluşan ve belirli vezin ile kafiyeye sahip şiir birimidir.",
+                highlight:false,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Diwan_of_Hafiz%2C_Iran%2C_late_16th_century%2C_ink%2C_opaque_watercolor%2C_and_gold_on_paper_-_Freer_Gallery_of_Art_-_DSC04131.JPG/320px-Diwan_of_Hafiz%2C_Iran%2C_late_16th_century%2C_ink%2C_opaque_watercolor%2C_and_gold_on_paper_-_Freer_Gallery_of_Art_-_DSC04131.JPG",alt:"Divan şiiri el yazması",icon:"fa-feather"}
+            },
+
+            /* — Kalan: slider'da görünür — */
+            {
+                label:"5. Beytü'l-Kasîde", sourceType:"siir",
+                reference:"Ebu Said es-Sükkerî / Ahmet Şevki",
+                title:"Kasidede En Güzel Beyit",
+                description:"Bir kasidenin en güçlü ve en anlamlı beytidir; tıpkı yılanın kafası gibi kasidenin ruhu sayılır.",
+                highlight:true,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Arabic_calligraphy_quran.jpg/320px-Arabic_calligraphy_quran.jpg",alt:"Arapça hat sanatı",icon:"fa-feather-pointed"}
+            },
+            {
+                label:"6. Beytü'l-Kavim", sourceType:"siir",
+                reference:"İbnü'l-Hira et-Teymî",
+                title:"Kabilenin Hanesi — Soylu Aile",
+                description:"Kabilenin ileri gelenlerini ve şerefli ailesini ifade eder. Önderliğin ve soyluluğun simgesidir.",
+                highlight:false,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Bedouin_black_tent.jpg/320px-Bedouin_black_tent.jpg",alt:"Bedevi siyah çadır",icon:"fa-tent"}
+            },
+            {
+                label:"7. Beytullâh — Kâbe", sourceType:"quran",
+                reference:"Kureyş 106:3",
+                title:"Beytullâh — Kâbe-i Müşerrefe",
+                description:"Mekke'deki Kâbe'nin Kur'anî adıdır. Müslümanların kıblesi ve hac mekânıdır.",
+                highlight:true,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Mecca_Kaaba.JPG/320px-Mecca_Kaaba.JPG",alt:"Kâbe-i Müşerrefe, Mekke",icon:"fa-kaaba"}
+            },
+            {
+                label:"8. Beytü'l-Mâl", sourceType:"hikmet",
+                reference:"İbn Teymiyye — es-Siyâsetü'ş-Şer'iyye",
+                title:"Beytü'l-Mâl — Devlet Hazinesi",
+                description:"Devlet gelirlerinin ve kamu mallarının muhafaza edildiği hazinedir. İslam hukukunda önemli bir kurumdur.",
+                highlight:false,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Islamic_Coins.jpg/320px-Islamic_Coins.jpg",alt:"İslam dönemi sikkeleri",icon:"fa-coins"}
+            },
+            {
+                label:"9. Beytü'l-Makdis", sourceType:"hadis",
+                reference:"Hadis-i Nebevî — İsrâ rivayeti",
+                title:"Beytü'l-Makdis — Mescid-i Aksa",
+                description:"İsrâ hadisesinde geçen kutsal mekân; Kudüs'teki Mescid-i Aksa'yı ve çevresini ifade eder.",
+                highlight:true,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Jerusalem_Al-Aqsa_Mosque_BW_1.JPG/320px-Jerusalem_Al-Aqsa_Mosque_BW_1.JPG",alt:"Mescid-i Aksa, Kudüs",icon:"fa-mosque"}
+            },
+            {
+                label:"10. Buyûtullâh — Camiler", sourceType:"quran",
+                reference:"Nur 24:36",
+                title:"Buyûtullâh — Allah'ın Evleri (Camiler)",
+                description:"Camiler için kullanılan çoğul form. Allah'ın adının zikredildiği kutsal ibadet mekânlarıdır.",
+                highlight:false,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Sultan_Ahmed_mosque_interior.jpg/320px-Sultan_Ahmed_mosque_interior.jpg",alt:"Cami iç mimarisi",icon:"fa-mosque"}
+            },
+            {
+                label:"11. el-Beytü'l-Harâm", sourceType:"quran",
+                reference:"Maide 5:97",
+                title:"el-Beytü'l-Harâm — Dokunulmaz Kâbe",
+                description:"Kâbe'nin başka bir Kur'anî adıdır; kutsal ve dokunulmaz olduğu, savaşın yasak olduğu bölgeyi ifade eder.",
+                highlight:true,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Mecca_Kaaba.JPG/320px-Mecca_Kaaba.JPG",alt:"el-Beytü'l-Harâm — Kâbe",icon:"fa-kaaba"}
+            },
+            {
+                label:"12. el-Beytü'l-Atîk", sourceType:"quran",
+                reference:"Hac 22:29",
+                title:"el-Beytü'l-Atîk — Kadim ve Özgür Kâbe",
+                description:"'Atîk' eski/özgür demektir. Kâbe'nin tarihî derinliğine ve hiçbir zorbanın tahakkümüne girmediğine işaret eder.",
+                highlight:false,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Mecca_Kaaba.JPG/320px-Mecca_Kaaba.JPG",alt:"el-Beytü'l-Atîk",icon:"fa-kaaba"}
+            },
+            {
+                label:"13. el-Beytü'l-Muharrem", sourceType:"hadis",
+                reference:"Tarife el-Himyeriyye / M. Hasan Nîlek",
+                title:"el-Beytü'l-Muharrem — Hürmete Layık Kâbe",
+                description:"Kâbe'ye duyulan büyük saygı ve hürmeti ön plana çıkaran; özellikle şiir ve edebiyatta görülen kullanım.",
+                highlight:false,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Mecca_Kaaba.JPG/320px-Mecca_Kaaba.JPG",alt:"el-Beytü'l-Muharrem",icon:"fa-kaaba"}
+            },
+            {
+                label:"14. el-Beytü'l-Ma'mûr", sourceType:"quran",
+                reference:"Tur 52:4",
+                title:"el-Beytü'l-Ma'mûr — Gökteki Meskûn Ev",
+                description:"Yedinci katta, meleklerin ibadet ettiği ve Kâbe'nin tam karşısında olduğu rivayet edilen kutsal mekân.",
+                highlight:true,
+                image:{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Milky_way_2.jpg/320px-Milky_way_2.jpg",alt:"Semavî temsil",icon:"fa-star-and-crescent"}
+            }
+        ]
+    }
+};
+
+/* ── Slider state ── */
+const CARD_W = 306; // 290px + 16px gap
+let sliderPos = 0;
+let extraCtxs = [];
+
+function quickSearch(w) { document.getElementById('searchInput').value = w; showResult(); }
+
+function showResult() {
+    const v = document.getElementById('searchInput').value.trim().toLowerCase();
+    let key = null;
+    if (v.includes('kitab')||v.includes('ktb')||v==='kitâb') key='kitab';
+    if (v.includes('beyt') ||v.includes('byt') ||v==='بيت')  key='beyt';
+    if (!key) { alert('Şu an aranabilir: "kitab", "beyt"'); return; }
+
+    const wd = WORDS[key];
+    sliderPos = 0;
+    extraCtxs = wd.contexts.slice(4);
+
+    document.getElementById('res-title').textContent  = wd.title;
+    document.getElementById('res-arabic').textContent = wd.arabic;
+    document.getElementById('res-root').textContent   = wd.root;
+    document.getElementById('ctx-badge').textContent  = wd.contexts.length + ' bağlam';
+
+    // Çoğullar
+    const pw = document.getElementById('res-plurals-wrap');
+    const pe = document.getElementById('res-plurals');
+    if (wd.plurals?.length) {
+        pw.style.display = '';
+        pe.innerHTML = wd.plurals.map(p =>
+            `<span class="me-3"><span class="arabic-sm">${p.arabic}</span> <small class="text-muted">(${p.transliteration})</small></span>`
+        ).join('');
+    } else pw.style.display='none';
+
+    document.getElementById('res-freq-bar').style.width = wd.frequency.percent+'%';
+    document.getElementById('res-freq-text').textContent = wd.frequency.label;
+    document.getElementById('res-collocations').innerHTML =
+        wd.collocations.map(c=>`<span class="badge rounded-pill border text-dark me-2 mb-1">${c}</span>`).join('');
+
+    buildGrid(wd.contexts.slice(0,4));
+
+    const ss = document.getElementById('slider-section');
+    if (extraCtxs.length) { buildSlider(extraCtxs); ss.style.display=''; }
+    else ss.style.display='none';
+
+    document.getElementById('initialMessage').style.display='none';
+    document.getElementById('resultArea').style.display='block';
+    window.scrollTo({top:420,behavior:'smooth'});
+}
+
+/* Kaynak etiketi */
+function srcBadge(t) {
+    const m={quran:['src-quran','fa-book-open',"Kur'an"],hadis:['src-hadis','fa-moon',"Hadis"],siir:['src-siir','fa-feather',"Şiir"],hikmet:['src-hikmet','fa-lightbulb',"Hikmet"]};
+    const [c,i,l]=m[t]||m.hikmet;
+    return `<span class="${c}"><i class="fa-solid ${i} me-1"></i>${l}</span>`;
+}
+
+/* Görsel + placeholder */
+function imgEl(img, h, extraClass='') {
+    const icon = img?.icon||'fa-image';
+    if (img?.url) {
+        return `<img src="${img.url}" alt="${img.alt||''}" class="${extraClass}"
+            style="width:100%;height:${h}px;object-fit:cover;display:block;"
+            onerror="this.outerHTML=phHTML('${icon}',${h})">`;
+    }
+    return phHTML(icon,h);
+}
+function phHTML(icon,h) {
+    return `<div style="width:100%;height:${h}px;background:linear-gradient(135deg,#e9edc9,#c8dda0);display:flex;align-items:center;justify-content:center;font-size:2rem;color:#1a4d2e;opacity:.55;"><i class="fa-solid ${icon}"></i></div>`;
+}
+
+/* Grid */
+function buildGrid(ctxs) {
+    // Kolon genişliği: kaç bağlam varsa o kadar eşit bölünür, max 4 sütun
+    const colClass = {1:'col-12', 2:'col-sm-6', 3:'col-sm-6 col-lg-4'}[ctxs.length] || 'col-sm-6 col-lg-3';
+    document.getElementById('grid-area').innerHTML = ctxs.map(c=>`
+        <div class="${colClass}">
+            <div class="g-card${c.highlight?' hl':''}">
+                ${imgEl(c.image,140)}
+                <div class="g-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-1">
+                        <span class="badge badge-ctx">${c.label}</span>
+                        ${srcBadge(c.sourceType)}
+                    </div>
+                    <p class="text-muted mb-1" style="font-size:.7rem;">
+                        <i class="fa-solid fa-quote-left me-1 opacity-40"></i>${c.reference}
+                    </p>
+                    <h6 class="fw-semibold mb-1" style="font-size:.88rem;">${c.title}</h6>
+                    <p class="text-secondary mb-0" style="font-size:.8rem;">${c.description}</p>
+                </div>
+            </div>
+        </div>`).join('');
+}
+
+/* Slider */
+function buildSlider(ctxs) {
+    document.getElementById('slider-track').innerHTML = ctxs.map(c=>`
+        <div class="s-card${c.highlight?' hl':''}">
+            ${imgEl(c.image,118)}
+            <div class="s-card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-1">
+                    <span class="badge badge-ctx" style="font-size:.65rem;">${c.label}</span>
+                    ${srcBadge(c.sourceType)}
+                </div>
+                <p class="text-muted mb-1" style="font-size:.67rem;">
+                    <i class="fa-solid fa-quote-left me-1 opacity-40"></i>${c.reference}
+                </p>
+                <h6 class="fw-semibold mb-1" style="font-size:.84rem;">${c.title}</h6>
+                <p class="text-secondary mb-0" style="font-size:.76rem;">${c.description}</p>
+            </div>
+        </div>`).join('');
+    sliderPos=0;
+    updateSlider();
+}
+
+function slide(d) {
+    const vis = visCount();
+    const max = Math.max(0, extraCtxs.length - vis);
+    sliderPos = Math.min(max, Math.max(0, sliderPos+d));
+    updateSlider();
+}
+function visCount() {
+    const w = document.getElementById('slider-track').parentElement.offsetWidth;
+    return Math.max(1, Math.floor(w/CARD_W));
+}
+function updateSlider() {
+    document.getElementById('slider-track').style.transform = `translateX(-${sliderPos*CARD_W}px)`;
+    const vis=visCount(), max=Math.max(0,extraCtxs.length-vis);
+    document.getElementById('btn-prev').disabled = sliderPos===0;
+    document.getElementById('btn-next').disabled = sliderPos>=max;
+    document.getElementById('slide-lbl').textContent =
+        `${sliderPos+1}–${Math.min(sliderPos+vis,extraCtxs.length)} / ${extraCtxs.length}`;
+}
+window.addEventListener('resize',()=>{ if(extraCtxs.length) updateSlider(); });
+</script>
+</body>
+</html>
