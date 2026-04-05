@@ -204,6 +204,7 @@
         arama fonksiyonu searchKeys'i otomatik tarar.
 
    Her "context" (bağlam) alanları:
+     id         : Bağlam numarası (dosya yolu vb. için id değeri)
      label      : Kısa etiket (numara + ad)
      sourceType : "quran" | "hadis" | "siir" | "hikmet"
      reference  : Kaynak bilgisi (sure:ayet, hadis, yazar)
@@ -234,6 +235,7 @@ const WORDS = {
         collocations: ["Kitâbun Mübîn", "Ehl-i Kitâb", "Ümmü'l Kitâb"],
         contexts: [
             {
+                id: 1,
                 label: "1. Vahyedilen Kitap",
                 sourceType: "quran",
                 reference: "Bakara 2:2 — «Zâlikel kitâbu lâ reybe fîh...»",
@@ -243,6 +245,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Quran_Kareem.jpg/320px-Quran_Kareem.jpg", alt: "Kur'an-ı Kerim", icon: "fa-book-open" }
             },
             {
+                id: 2,
                 label: "2. Kader / Hüküm",
                 sourceType: "quran",
                 reference: "Enfal 8:68 — «Lev lâ kitâbun minallâhi sebeka...»",
@@ -270,6 +273,7 @@ const WORDS = {
         collocations: ["Ehlü'l-Beyt", "Beytullâh", "Beytü'l-Makdis", "Beytü'l-Mâl", "el-Beytü'l-Harâm"],
         contexts: [
             {
+                id: 1,
                 label: "1. Mesken / Barınak",
                 sourceType: "quran",
                 reference: "Nuh 71:28",
@@ -279,6 +283,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Traditional-courtyard-house.jpg/320px-Traditional-courtyard-house.jpg", alt: "Geleneksel avlulu ev", icon: "fa-house" }
             },
             {
+                id: 2,
                 label: "2. Ehl-i Beyt (1) — Peygamberin Ailesi",
                 sourceType: "quran",
                 reference: "Ahzab 33:33",
@@ -288,6 +293,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Rawdat_al-Sharif.jpg/320px-Rawdat_al-Sharif.jpg", alt: "Hz. Peygamberin türbesi", icon: "fa-mosque" }
             },
             {
+                id: 3,
                 label: "3. Ehl-i Beyt (2) — Erkeğin Ailesi",
                 sourceType: "quran",
                 reference: "Kasas 28:12",
@@ -297,6 +303,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Muslim_Family.jpg/320px-Muslim_Family.jpg", alt: "Müslüman aile", icon: "fa-people-roof" }
             },
             {
+                id: 4,
                 label: "4. Beytü'ş-Şi'r — Şiir Beyti",
                 sourceType: "siir",
                 reference: "Aruz ve kafiye ilmi",
@@ -306,6 +313,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Diwan_of_Hafiz%2C_Iran%2C_late_16th_century%2C_ink%2C_opaque_watercolor%2C_and_gold_on_paper_-_Freer_Gallery_of_Art_-_DSC04131.JPG/320px-Diwan_of_Hafiz%2C_Iran%2C_late_16th_century%2C_ink%2C_opaque_watercolor%2C_and_gold_on_paper_-_Freer_Gallery_of_Art_-_DSC04131.JPG", alt: "Divan şiiri el yazması", icon: "fa-feather" }
             },
             {
+                id: 5,
                 label: "5. Beytü'l-Kasîde",
                 sourceType: "siir",
                 reference: "Ebu Said es-Sükkerî / Ahmet Şevki",
@@ -315,6 +323,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Arabic_calligraphy_quran.jpg/320px-Arabic_calligraphy_quran.jpg", alt: "Arapça hat sanatı", icon: "fa-feather-pointed" }
             },
             {
+                id: 6,
                 label: "6. Beytü'l-Kavim",
                 sourceType: "siir",
                 reference: "İbnü'l-Hira et-Teymî",
@@ -324,6 +333,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Bedouin_black_tent.jpg/320px-Bedouin_black_tent.jpg", alt: "Bedevi siyah çadır", icon: "fa-tent" }
             },
             {
+                id: 7,
                 label: "7. Beytullâh — Kâbe",
                 sourceType: "quran",
                 reference: "Kureyş 106:3",
@@ -333,6 +343,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Mecca_Kaaba.JPG/320px-Mecca_Kaaba.JPG", alt: "Kâbe-i Müşerrefe, Mekke", icon: "fa-kaaba" }
             },
             {
+                id: 8,
                 label: "8. Beytü'l-Mâl",
                 sourceType: "hikmet",
                 reference: "İbn Teymiyye — es-Siyâsetü'ş-Şer'iyye",
@@ -342,6 +353,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Islamic_Coins.jpg/320px-Islamic_Coins.jpg", alt: "İslam dönemi sikkeleri", icon: "fa-coins" }
             },
             {
+                id: 9,
                 label: "9. Beytü'l-Makdis",
                 sourceType: "hadis",
                 reference: "Hadis-i Nebevî — İsrâ rivayeti",
@@ -351,6 +363,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Jerusalem_Al-Aqsa_Mosque_BW_1.JPG/320px-Jerusalem_Al-Aqsa_Mosque_BW_1.JPG", alt: "Mescid-i Aksa, Kudüs", icon: "fa-mosque" }
             },
             {
+                id: 10,
                 label: "10. Buyûtullâh — Camiler",
                 sourceType: "quran",
                 reference: "Nur 24:36",
@@ -360,6 +373,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Sultan_Ahmed_mosque_interior.jpg/320px-Sultan_Ahmed_mosque_interior.jpg", alt: "Cami iç mimarisi", icon: "fa-mosque" }
             },
             {
+                id: 11,
                 label: "11. el-Beytü'l-Harâm",
                 sourceType: "quran",
                 reference: "Maide 5:97",
@@ -369,6 +383,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Mecca_Kaaba.JPG/320px-Mecca_Kaaba.JPG", alt: "el-Beytü'l-Harâm — Kâbe", icon: "fa-kaaba" }
             },
             {
+                id: 12,
                 label: "12. el-Beytü'l-Atîk",
                 sourceType: "quran",
                 reference: "Hac 22:29",
@@ -378,6 +393,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Mecca_Kaaba.JPG/320px-Mecca_Kaaba.JPG", alt: "el-Beytü'l-Atîk", icon: "fa-kaaba" }
             },
             {
+                id: 13,
                 label: "13. el-Beytü'l-Muharrem",
                 sourceType: "hadis",
                 reference: "Tarife el-Himyeriyye / M. Hasan Nîlek",
@@ -387,6 +403,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Mecca_Kaaba.JPG/320px-Mecca_Kaaba.JPG", alt: "el-Beytü'l-Muharrem", icon: "fa-kaaba" }
             },
             {
+                id: 14,
                 label: "14. el-Beytü'l-Ma'mûr",
                 sourceType: "quran",
                 reference: "Tur 52:4",
@@ -413,6 +430,7 @@ const WORDS = {
         collocations: ["Fî sebîlillâh", "Dârü'l-harb", "Ehlü'l-harb"],
         contexts: [
             {
+                id: 1,
                 label: "1. Silahlı Çatışma / Savaş",
                 sourceType: "quran",
                 reference: "Mâide 5:64 — «Küllema evkadû nâran lil-harbi etfee'hallâh...»",
@@ -422,6 +440,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Battle_of_Badr.jpg/320px-Battle_of_Badr.jpg", alt: "Bedir Savaşı tasviri", icon: "fa-shield-halved" }
             },
             {
+                id: 2,
                 label: "2. Savaşın Sona Ermesi",
                 sourceType: "quran",
                 reference: "Muhammed 47:4 — «Hattâ teda'al-harbu evzârehâ...»",
@@ -431,6 +450,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Olive_branch.jpg/320px-Olive_branch.jpg", alt: "Barış sembolü zeytin dalı", icon: "fa-dove" }
             },
             {
+                id: 3,
                 label: "3. Savaş Hilesi (Hadis)",
                 sourceType: "hadis",
                 reference: "Hadis-i Şerif — «el-Harbu hud'a»",
@@ -440,6 +460,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Sword_of_Islam.jpg/320px-Sword_of_Islam.jpg", alt: "İslam kılıcı sembolü", icon: "fa-swords" }
             },
             {
+                id: 4,
                 label: "4. Günlük Kullanım",
                 sourceType: "hikmet",
                 reference: "Özlü söz — «Lâ tuşâvir bahîlen fî sıla...»",
@@ -466,6 +487,7 @@ const WORDS = {
         collocations: ["Nâru cehennem", "Ehlü'n-nâr", "Nârun mübâreke"],
         contexts: [
             {
+                id: 1,
                 label: "1. Fiziksel Ateş / Alev",
                 sourceType: "quran",
                 reference: "Neml 27:8 — «Felemma câehâ nûdiye en bûrike men fi'n-nâr...»",
@@ -475,6 +497,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Campfire_at_night.jpg/320px-Campfire_at_night.jpg", alt: "Gece ateşi", icon: "fa-fire" }
             },
             {
+                id: 2,
                 label: "2. Cehennem Ateşi",
                 sourceType: "quran",
                 reference: "Hadis-i Şerif — «Lâ tekûmu's-sâ'atu hattâ tahruce nârun min ardi'l-Hicâz...»",
@@ -484,6 +507,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Lava_Fountain.jpg/320px-Lava_Fountain.jpg", alt: "Yanardağ lavı", icon: "fa-volcano" }
             },
             {
+                id: 3,
                 label: "3. Ateş — Atasözü / Özlü Söz",
                 sourceType: "hikmet",
                 reference: "Özlü söz — «Eşheru min nârin alâ 'alam»",
@@ -513,6 +537,7 @@ const WORDS = {
         collocations: ["Dârü'l-harb", "Dârü's-selâm", "Dârü'l-âhire", "Dârü'l-İslâm"],
         contexts: [
             {
+                id: 1,
                 label: "1. İkametgâh / Mesken",
                 sourceType: "quran",
                 reference: "Kasas 28:81 — «Fehesefnâ bihi ve bidârihi'l-ard...»",
@@ -522,6 +547,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Traditional-courtyard-house.jpg/320px-Traditional-courtyard-house.jpg", alt: "Geleneksel Arap evi", icon: "fa-house" }
             },
             {
+                id: 2,
                 label: "2. En Hayırlı Ev (Hadis)",
                 sourceType: "hadis",
                 reference: "Hadis-i Şerif — «İnne hayra dûri'l-Ensâr dâru benî'n-Neccâr...»",
@@ -531,6 +557,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Rawdat_al-Sharif.jpg/320px-Rawdat_al-Sharif.jpg", alt: "Medine", icon: "fa-mosque" }
             },
             {
+                id: 3,
                 label: "3. Komşu ve Ev (Özlü Söz)",
                 sourceType: "hikmet",
                 reference: "Mthel — «el-Câru kable'd-dâr ve'r-refîku kable't-tarîk»",
@@ -540,6 +567,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Neighbourhood_-_geograph.org.uk_-_1461317.jpg/320px-Neighbourhood_-_geograph.org.uk_-_1461317.jpg", alt: "Komşuluk mahallesi", icon: "fa-people-roof" }
             },
             {
+                id: 4,
                 label: "4. Dârü'l-Âhire — Ahiret Yurdu",
                 sourceType: "quran",
                 reference: "Kasas 28:83 — «Tilke'd-dârü'l-âhiratu nec'aluhâ...»",
@@ -567,6 +595,7 @@ const WORDS = {
         collocations: ["Zirâü'l-köpek", "Zirâ' ölçüsü"],
         contexts: [
             {
+                id: 1,
                 label: "1. Kol — Dirsekten Orta Parmağa",
                 sourceType: "quran",
                 reference: "Kehf 18:18 — «Ve kelbuhum bâsitun zirâ'ayhi bi'l-vasîd»",
@@ -576,6 +605,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Dog_on_Mat.jpg/320px-Dog_on_Mat.jpg", alt: "Uzanan köpek", icon: "fa-dog" }
             },
             {
+                id: 2,
                 label: "2. Zirâ' — Uzunluk Ölçü Birimi",
                 sourceType: "hikmet",
                 reference: "Hadis-i Şerif — «Lev du'îtu ilâ zirâ'in ev kurâ'in le-ecebtu»",
@@ -585,6 +615,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Units_of_measurement.jpg/320px-Units_of_measurement.jpg", alt: "Ölçüm birimleri", icon: "fa-ruler" }
             },
             {
+                id: 3,
                 label: "3. Kol — Özlü Söz",
                 sourceType: "hikmet",
                 reference: "Mthel — «Lâ tut'im el-'abde'l-kurâ' feyatma' fi'z-zirâ'»",
@@ -611,6 +642,7 @@ const WORDS = {
         collocations: ["Ricleyk (iki ayak)", "Alâ riclin (tek ayak üstünde)"],
         contexts: [
             {
+                id: 1,
                 label: "1. Bacak / Ayak — Uzuv",
                 sourceType: "quran",
                 reference: "Sâd 38:42 — «Urkud bi-riclika hâzâ mugteselun bâridun ve şerâb»",
@@ -620,6 +652,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Barefeet.jpg/320px-Barefeet.jpg", alt: "Ayak", icon: "fa-person-walking" }
             },
             {
+                id: 2,
                 label: "2. Tek Ayak Üzerinde Durmak",
                 sourceType: "hikmet",
                 reference: "Deyim — «Vakafe alâ riclin»",
@@ -629,6 +662,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Balance.jpg/320px-Balance.jpg", alt: "Denge", icon: "fa-scale-balanced" }
             },
             {
+                id: 3,
                 label: "3. Bir Ayak Öne Bir Ayak Geri",
                 sourceType: "hikmet",
                 reference: "Deyim — «Kâne yukaddim riclen ve yu'ehhiru uhrâ»",
@@ -655,6 +689,7 @@ const WORDS = {
         collocations: ["Sılatü'r-rahm", "Kat'ü'r-rahm", "Erhâm (çoğul)"],
         contexts: [
             {
+                id: 1,
                 label: "1. Rahim — Anatomi / Organ",
                 sourceType: "quran",
                 reference: "Âl-i İmrân 3:6 — «Huve'llezî yusavviruküm fi'l-erhâmi keyfe yeşâ'»",
@@ -664,6 +699,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Pregnant_woman.jpg/320px-Pregnant_woman.jpg", alt: "Hamile kadın", icon: "fa-baby" }
             },
             {
+                id: 2,
                 label: "2. Akrabalık Bağı",
                 sourceType: "quran",
                 reference: "Muhammed 47:22 — «...ve tukattı'û erhâmekum»",
@@ -673,6 +709,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Muslim_Family.jpg/320px-Muslim_Family.jpg", alt: "Aile bağı", icon: "fa-people-roof" }
             },
             {
+                id: 3,
                 label: "3. Akraba Ziyareti — Hadis",
                 sourceType: "hadis",
                 reference: "Hadis-i Şerif — «Lâ yadhuhu'l-cennete kâtı'u rahm»",
@@ -700,6 +737,7 @@ const WORDS = {
         collocations: ["Rîhu'l-'âsife", "Riyâhu'l-mübeşşirât", "Fî rîhik (mecaz)"],
         contexts: [
             {
+                id: 1,
                 label: "1. Rüzgar — Hareket Eden Hava",
                 sourceType: "quran",
                 reference: "Enbiyâ 21:81 — «Ve li-Süleymâne'r-rîha âsıfeten tecrî bi-emrih»",
@@ -709,6 +747,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Dust_storm_Texas_1935.jpg/320px-Dust_storm_Texas_1935.jpg", alt: "Kum fırtınası", icon: "fa-wind" }
             },
             {
+                id: 2,
                 label: "2. Rüzgar — Rahmet ve Azap",
                 sourceType: "hadis",
                 reference: "Hadis-i Şerif — «Lâ tesubbü'r-rîha fe-innehâ min rûhi'llâh...»",
@@ -718,6 +757,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Rain_cloud.jpg/320px-Rain_cloud.jpg", alt: "Yağmur bulutu", icon: "fa-cloud-rain" }
             },
             {
+                id: 3,
                 label: "3. Rüzgar — Atasözü",
                 sourceType: "hikmet",
                 reference: "Mthel — «Tecrî'r-riyâhu bimâ lâ teştehî's-sufun»",
@@ -745,6 +785,7 @@ const WORDS = {
         collocations: ["Fî sebîlillâh", "Sebîlü'l-hak", "Sebîlü'r-rüşd"],
         contexts: [
             {
+                id: 1,
                 label: "1. Yol — Fiziksel Patika",
                 sourceType: "quran",
                 reference: "En'âm 6:153 — «Ve lâ tettebiu's-sübüle fe-tefferrage biküm an sebîlih»",
@@ -754,6 +795,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Desert_road.jpg/320px-Desert_road.jpg", alt: "Çöl yolu", icon: "fa-road" }
             },
             {
+                id: 2,
                 label: "2. Fî Sebîlillâh — Allah Yolunda",
                 sourceType: "quran",
                 reference: "Kur'an geneli",
@@ -763,6 +805,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Quran_open.jpg/320px-Quran_open.jpg", alt: "Açık Kur'an", icon: "fa-book-open" }
             },
             {
+                id: 3,
                 label: "3. Başarıya Giden Yol",
                 sourceType: "hikmet",
                 reference: "Deyim — «el-'Amelü hüve sebîlü'n-necâh»",
@@ -789,6 +832,7 @@ const WORDS = {
         collocations: ["Merru's-sehâb", "Sehâbun kesîf"],
         contexts: [
             {
+                id: 1,
                 label: "1. Bulut — Hava Olayı",
                 sourceType: "quran",
                 reference: "Neml 27:88 — «Ve tere'l-cibâle tahsebuhâ-câmideten ve hiye temurru merre's-sehâb»",
@@ -798,6 +842,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Clouds_over_the_Atlantic_Ocean.jpg/320px-Clouds_over_the_Atlantic_Ocean.jpg", alt: "Okyanus üzerinde bulutlar", icon: "fa-cloud" }
             },
             {
+                id: 2,
                 label: "2. Bulut — Oruç ve Hilal Hadisi",
                 sourceType: "hadis",
                 reference: "Hadis-i Şerif — «Sûmû li-ruʾyetihi... fe-in hâle beynekum ve beynehû sehâbun»",
@@ -807,6 +852,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Crescent_moon.jpg/320px-Crescent_moon.jpg", alt: "Hilal ay", icon: "fa-moon" }
             },
             {
+                id: 3,
                 label: "3. Bulut — Atasözü",
                 sourceType: "hikmet",
                 reference: "Mthel — «Hazzun fi's-sehâb, ve 'aklun fi't-turâb»",
@@ -833,6 +879,7 @@ const WORDS = {
         collocations: ["Sikkînun hadde (keskin bıçak)"],
         contexts: [
             {
+                id: 1,
                 label: "1. Bıçak — Kesme Aleti",
                 sourceType: "quran",
                 reference: "Yusuf 12:31 — «Ve âtet külle vâhidetin minhünne sikkînen»",
@@ -842,6 +889,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Kitchen_knife.jpg/320px-Kitchen_knife.jpg", alt: "Mutfak bıçağı", icon: "fa-utensils" }
             },
             {
+                id: 2,
                 label: "2. Bıçaksız Kurban — Hadis",
                 sourceType: "hadis",
                 reference: "Hadis-i Şerif — «Men cu'ile kâdiyen beyne'n-nâsi fekad zubiha bi-gayri sikkîn»",
@@ -851,6 +899,7 @@ const WORDS = {
                 image: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Old_Court.jpg/320px-Old_Court.jpg", alt: "Eski mahkeme salonu", icon: "fa-gavel" }
             },
             {
+                id: 3,
                 label: "3. Bıçak — Gündelik Kullanım",
                 sourceType: "hikmet",
                 reference: "Gündelik Arapça — «Taanahu bi-sikkînin fî batnihî»",
