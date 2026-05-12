@@ -696,7 +696,7 @@
       <p class="countdown-label">Yarışmaya Kalan Süre</p>
       <div class="countdown">
         <div class="countdown-unit">
-          <div class="countdown-num" id="cd-days">000</div>
+          <div class="countdown-num" id="cd-days">00</div>
           <div class="countdown-sub">Gün</div>
         </div>
         <div class="countdown-unit">
@@ -936,7 +936,7 @@
     const prev = secEl.textContent;
     const cur = pad(secs, 2);
 
-    document.getElementById('cd-days').textContent = pad(days, 3);
+    document.getElementById('cd-days').textContent = pad(days, 2);
     document.getElementById('cd-hours').textContent = pad(hours, 2);
     document.getElementById('cd-mins').textContent = pad(mins, 2);
     secEl.textContent = cur;
