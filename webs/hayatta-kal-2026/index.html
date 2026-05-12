@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hayatta Kal 2026 — Trabzon Teknoloji Derneği</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Noto+Serif+TR:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a2e1a;
+    --moss: #2d4a2d;
+    --pine: #3d6b3d;
+    --fern: #5a8a5a;
+    --sage: #8ab88a;
+    --mist: #c8dcc8;
+    --ember: #e85d1a;
+    --flame: #ff7c3a;
+    --gold: #d4a028;
+    --amber: #f0c040;
+    --cream: #f5ede0;
+    --bark: #6b4c2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--forest);
+    color: var(--cream);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ===== HERO ===== */
+  #hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(232,93,26,0.18) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(45,74,45,0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(26,46,26,0.9) 0%, transparent 100%);
+  }
+
+  /* SVG forest scene */
+  .forest-scene {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  /* Stars */
+  .stars {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--d, 3s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    opacity: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: var(--op, 0.9); transform: scale(1); }
+  }
+
+  /* Fire particles */
+  .fire-container {
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .fire-particle {
+    position: absolute;
+    border-radius: 50% 50% 20% 20%;
+    animation: fireRise var(--fd, 1.2s) ease-out infinite;
+    animation-delay: var(--fdelay, 0s);
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: blur(1px);
+  }
+
+  @keyframes fireRise {
+    0% { opacity: 1; transform: translateX(-50%) translateY(0) scaleX(1); }
+    60% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateX(calc(-50% + var(--fx, 0px))) translateY(-80px) scaleX(0.3); }
+  }
+
+  /* Floating leaves */
+  .leaf {
+    position: absolute;
+    font-size: var(--ls, 1.2rem);
+    animation: leafDrift var(--ld, 8s) ease-in-out infinite;
+    animation-delay: var(--ldelay, 0s);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @keyframes leafDrift {
+    0% { opacity: 0; transform: translateY(-20px) rotate(0deg); }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(100vh) rotate(720deg) translateX(var(--lx, 50px)); }
+  }
+
+  /* ===== LOGO & TITLE ===== */
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 900px;
+  }
+
+  .badge {
+    display: inline-block;
+    border: 1px solid rgba(212,160,40,0.5);
+    background: rgba(212,160,40,0.08);
+    color: var(--amber);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 0.4rem 1.2rem;
+    margin-bottom: 2rem;
+    animation: fadeSlideDown 1s ease forwards;
+    opacity: 0;
+  }
+
+  .main-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(4rem, 12vw, 9rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+    animation: fadeSlideDown 1s ease 0.2s forwards;
+    opacity: 0;
+    position: relative;
+  }
+
+  .main-title .accent {
+    color: var(--ember);
+    display: block;
+  }
+
+  .main-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ember), var(--gold));
+    margin: 1.2rem auto 0;
+  }
+
+  .tagline {
+    font-family: 'Noto Serif TR', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--sage);
+    margin-top: 1.5rem;
+    letter-spacing: 0.05em;
+    animation: fadeSlideDown 1s ease 0.4s forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== COUNTDOWN ===== */
+  .countdown-wrapper {
+    margin-top: 3.5rem;
+    animation: fadeSlideUp 1s ease 0.6s forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .countdown-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--fern);
+    margin-bottom: 1.2rem;
+  }
+
+  .countdown {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .countdown-unit::after {
+    content: ':';
+    position: absolute;
+    right: -0.65rem;
+    top: 0.4rem;
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    color: var(--ember);
+    opacity: 0.5;
+  }
+
+  .countdown-unit:last-child::after { display: none; }
+
+  .countdown-num {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-weight: 700;
+    color: var(--cream);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(212,160,40,0.2);
+    border-top: 2px solid var(--gold);
+    padding: 0.5rem 1rem;
+    min-width: 5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.1s;
+  }
+
+  .countdown-num::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40%;
+    background: rgba(255,255,255,0.03);
+    pointer-events: none;
+  }
+
+  .countdown-num.flash {
+    color: var(--ember);
+    border-color: var(--ember);
+  }
+
+  .countdown-sub {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fern);
+    margin-top: 0.5rem;
+  }
+
+  .event-date {
+    margin-top: 1.8rem;
+    font-size: 1rem;
+    color: var(--amber);
+    letter-spacing: 0.15em;
+    font-weight: 600;
+  }
+
+  .event-date span {
+    display: inline-block;
+    border-bottom: 1px solid rgba(212,160,40,0.3);
+    padding-bottom: 2px;
+  }
+
+  /* ===== SCROLL INDICATOR ===== */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    opacity: 0.4;
+    animation: bob 2s ease-in-out infinite;
+    z-index: 10;
+  }
+
+  .scroll-hint span {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ===== SECTIONS ===== */
+  section {
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+  }
+
+  .section-title::after {
+    content: '';
+    display: block;
+    height: 2px;
+    width: 50%;
+    background: linear-gradient(90deg, var(--ember), transparent);
+    margin-top: 0.5rem;
+  }
+
+  .section-sub {
+    font-size: 1rem;
+    color: var(--fern);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+  }
+
+  /* ===== PHILOSOPHY ===== */
+  .philosophy-block {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  @media (max-width: 700px) {
+    .philosophy-block { grid-template-columns: 1fr; }
+  }
+
+  .phil-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .phil-card:hover {
+    background: rgba(255,255,255,0.05);
+  }
+
+  .phil-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--accent, var(--ember));
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.4s;
+  }
+
+  .phil-card:hover::before { transform: scaleY(1); }
+
+  .phil-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .phil-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: var(--amber);
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+  }
+
+  .phil-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(245,237,224,0.7);
+  }
+
+  /* ===== DISCIPLINES ===== */
+  #disciplines { background: rgba(0,0,0,0.2); max-width: 100%; padding: 6rem 2rem; }
+
+  .disciplines-inner { max-width: 1100px; margin: 0 auto; }
+
+  .disc-grid {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 800px) {
+    .disc-grid { grid-template-columns: 1fr; }
+  }
+
+  .disc-card {
+    padding: 2.5rem 2rem;
+    border: 1px solid rgba(255,255,255,0.07);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(145deg, rgba(45,74,45,0.15), transparent);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .disc-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(232,93,26,0.1);
+  }
+
+  .disc-num {
+    position: absolute;
+    top: -0.5rem;
+    right: 1rem;
+    font-family: 'Cinzel', serif;
+    font-size: 4rem;
+    color: rgba(255,255,255,0.03);
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .disc-emoji { font-size: 2.5rem; margin-bottom: 1.2rem; }
+
+  .disc-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    color: var(--amber);
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(212,160,40,0.2);
+    padding-bottom: 0.5rem;
+  }
+
+  .disc-text {
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: rgba(245,237,224,0.65);
+  }
+
+  /* ===== ORIENTEERING highlight ===== */
+  .orient-block {
+    margin-top: 5rem;
+    border: 1px solid rgba(232,93,26,0.3);
+    background: rgba(232,93,26,0.04);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .orient-block::before {
+    content: '♟';
+    position: absolute;
+    right: 2rem;
+    top: 1rem;
+    font-size: 8rem;
+    opacity: 0.04;
+    line-height: 1;
+  }
+
+  .orient-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: var(--ember);
+    margin-bottom: 1rem;
+  }
+
+  .orient-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(245,237,224,0.75);
+    max-width: 700px;
+  }
+
+  /* ===== VALUES ===== */
+  .values-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .value-pill {
+    padding: 0.5rem 1.4rem;
+    border: 1px solid rgba(138,184,138,0.3);
+    background: rgba(138,184,138,0.05);
+    color: var(--sage);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.25s;
+  }
+
+  .value-pill:hover {
+    background: rgba(138,184,138,0.12);
+    border-color: var(--sage);
+    color: var(--cream);
+  }
+
+  /* ===== SOCIAL ===== */
+  .social-section {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: rgba(0,0,0,0.3);
+    max-width: 100%;
+  }
+
+  .ig-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 2.5rem;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    color: white;
+    text-decoration: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .ig-link::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.15);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+
+  .ig-link:hover::before { transform: translateX(0); }
+  .ig-link:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(253,29,29,0.4); }
+
+  .ig-icon {
+    width: 24px; height: 24px;
+    fill: white;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 2.5rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.15em;
+  }
+
+  footer a {
+    color: rgba(212,160,40,0.5);
+    text-decoration: none;
+  }
+
+  footer a:hover { color: var(--amber); }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212,160,40,0.2), transparent);
+    margin: 0;
+  }
+
+  /* reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* scan line effect */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.015) 2px,
+      rgba(0,0,0,0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div id="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Floating leaves -->
+  <div id="leaves"></div>
+
+  <!-- SVG Forest Scene -->
+  <svg class="forest-scene" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- sky glow -->
+    <ellipse cx="720" cy="300" rx="600" ry="120" fill="rgba(232,93,26,0.06)"/>
+    <!-- back trees -->
+    <g fill="#1a2e1a">
+      <polygon points="80,300 140,160 200,300"/>
+      <polygon points="120,300 165,100 210,300"/>
+      <polygon points="240,300 310,130 380,300"/>
+      <polygon points="300,300 355,80 410,300"/>
+      <polygon points="1060,300 1130,130 1200,300"/>
+      <polygon points="1120,300 1175,80 1230,300"/>
+      <polygon points="1240,300 1310,160 1380,300"/>
+      <polygon points="1280,300 1330,100 1380,300"/>
+    </g>
+    <!-- mid trees -->
+    <g fill="#1e3520">
+      <polygon points="0,300 60,180 120,300"/>
+      <polygon points="40,300 90,140 140,300"/>
+      <polygon points="160,300 230,110 300,300"/>
+      <polygon points="220,300 275,70 330,300"/>
+      <polygon points="380,300 440,150 500,300"/>
+      <polygon points="900,300 960,150 1020,300"/>
+      <polygon points="980,300 1040,110 1100,300"/>
+      <polygon points="1100,300 1160,70 1220,300"/>
+      <polygon points="1200,300 1265,140 1330,300"/>
+      <polygon points="1300,300 1360,180 1420,300"/>
+    </g>
+    <!-- front trees -->
+    <g fill="#1a2e1a">
+      <polygon points="-20,300 50,200 120,300"/>
+      <polygon points="100,300 160,170 220,300"/>
+      <polygon points="1200,300 1270,170 1340,300"/>
+      <polygon points="1310,300 1370,200 1430,300"/>
+    </g>
+    <!-- ground -->
+    <rect x="0" y="285" width="1440" height="15" fill="#111e11"/>
+    <!-- fire glow on ground -->
+    <ellipse cx="720" cy="290" rx="80" ry="10" fill="rgba(232,93,26,0.15)"/>
+  </svg>
+
+  <!-- Fire -->
+  <div class="fire-container" id="fire"></div>
+
+  <!-- Hero Content -->
+  <div class="hero-content">
+    <div class="badge">Trabzon Teknoloji Derneği — 2026</div>
+
+    <h1 class="main-title">
+      HAYATTA<span class="accent">KAL</span>
+    </h1>
+
+    <p class="tagline">"Doğa ile Birlikte Yaşa"</p>
+
+    <!-- Countdown -->
+    <div class="countdown-wrapper">
+      <p class="countdown-label">Yarışmaya Kalan Süre</p>
+      <div class="countdown">
+        <div class="countdown-unit">
+          <div class="countdown-num" id="cd-days">000</div>
+          <div class="countdown-sub">Gün</div>
+        </div>
+        <div class="countdown-unit">
+          <div class="countdown-num" id="cd-hours">00</div>
+          <div class="countdown-sub">Saat</div>
+        </div>
+        <div class="countdown-unit">
+          <div class="countdown-num" id="cd-mins">00</div>
+          <div class="countdown-sub">Dakika</div>
+        </div>
+        <div class="countdown-unit">
+          <div class="countdown-num" id="cd-secs">00</div>
+          <div class="countdown-sub">Saniye</div>
+        </div>
+      </div>
+      <p class="event-date"><span>22-25 Haziran 2026</span></p>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Keşfet</span>
+    <svg width="20" height="28" viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="18" height="20" rx="9" stroke="rgba(200,220,200,0.4)" stroke-width="1.5"/>
+      <circle cx="10" cy="8" r="2" fill="rgba(200,220,200,0.5)">
+        <animate attributeName="cy" values="8;13;8" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <path d="M6 24 L10 28 L14 24" stroke="rgba(200,220,200,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== PHILOSOPHY ===== -->
+<section id="felsefe">
+  <p class="section-sub reveal">Temel Felsefe</p>
+  <h2 class="section-title reveal">İmkânsızlıklar İçinde<br>İmkân Yaratmak</h2>
+
+  <div class="philosophy-block">
+    <div class="phil-card reveal" style="--accent: var(--ember)">
+      <span class="phil-icon">🏕️</span>
+      <div class="phil-title">Kriz Simülasyonu</div>
+      <p class="phil-text">Hayatta Kal, yalnızca fiziksel bir dayanıklılık sınavı değildir. Doğanın zorlu koşulları altında teorik bilginin pratik ve teknolojik çözümlere dönüştürüldüğü gerçek bir kriz anı simülasyonudur.</p>
+    </div>
+    <div class="phil-card reveal" style="--accent: var(--gold)">
+      <span class="phil-icon">🧭</span>
+      <div class="phil-title">Disiplinlerarası Yaklaşım</div>
+      <p class="phil-text">Doğa ile teknoloji iç içe geçer. Enerji üretiminden ilk yardıma, navigasyondan barınak inşasına kadar her beceri birbiriyle bağlantılıdır. Bütünsel düşünce esastır.</p>
+    </div>
+    <div class="phil-card reveal" style="--accent: var(--fern)">
+      <span class="phil-icon">🤝</span>
+      <div class="phil-title">Centilmenlik Rekabeti</div>
+      <p class="phil-text">Rakip takıma ihtiyaç anında yardım etmek, doğaya zarar vermeden yarışmak ve ekip ruhunu korumak; teknik puanlar kadar değer taşır. Etik liderlik ön plandadır.</p>
+    </div>
+    <div class="phil-card reveal" style="--accent: var(--sage)">
+      <span class="phil-icon">🌿</span>
+      <div class="phil-title">Geleceği Hazırlamak</div>
+      <p class="phil-text">Kamp ateşi etrafında söyleşiler, yıldız gözlemleri, açık hava sineması ve Pekünlü Pide Atölyesi gibi kültürel etkinlikler ile gençler milli, manevi ve sosyal değerlerle buluşur.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== DISCIPLINES ===== -->
+<div id="disciplines">
+  <div class="disciplines-inner">
+    <p class="section-sub reveal">3 Temel Disiplin</p>
+    <h2 class="section-title reveal">Beceri Yarışması</h2>
+
+    <div class="disc-grid">
+      <div class="disc-card reveal">
+        <div class="disc-num">01</div>
+        <div class="disc-emoji">⚡</div>
+        <div class="disc-title">Enerji</div>
+        <p class="disc-text">Doğal kaynakları kullanarak enerji üretme (su ve rüzgar).</p>
+      </div>
+      <div class="disc-card reveal" style="transition-delay:0.1s">
+        <div class="disc-num">02</div>
+        <div class="disc-emoji">💪</div>
+        <div class="disc-title">Sağlık ve Spor</div>
+        <p class="disc-text">İlk yardım müdahaleleri (AFAD ve UMKE), fiziksel kondisyon ve zorlu arazi şartlarında vücut direncini koruma (Oryantiring). Kriz anında doğru ve hızlı karar verme kapasitesi ölçülür.</p>
+      </div>
+      <div class="disc-card reveal" style="transition-delay:0.2s">
+        <div class="disc-num">03</div>
+        <div class="disc-emoji">🪓</div>
+        <div class="disc-title">Yaşam Becerileri</div>
+        <p class="disc-text">Çadır kurma, su arıtma, yön bulma ve temel düğüm teknikleri. Hayatta kalmayı mümkün kılan bu pratikler, gerçek doğa ortamında uygulamalı olarak deneyimlenir.</p>
+      </div>
+    </div>
+
+    <!-- Orienteering -->
+    <div class="orient-block reveal">
+      <div class="orient-title">♟ Zihin Satrancı: Oryantiring</div>
+      <p class="orient-text">
+        Yarışmanın en heyecanlı bölümlerinden olan Oryantiring, hızı stratejiyle harmanlayan benzersiz bir disiplindir. Katılımcılar harita ve pusula kullanarak hedeflere ulaşırken sadece koşmazlar; aynı zamanda en verimli rotayı hesaplamak için bir satranç oyuncusu gibi düşünmek zorundadırlar.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== VALUES ===== -->
+<section id="degerler">
+  <p class="section-sub reveal">Yarışmanın Ruhu</p>
+  <h2 class="section-title reveal">Değerlerimiz</h2>
+  <div class="values-strip">
+    <div class="value-pill reveal">🌿 Doğa Saygısı</div>
+    <div class="value-pill reveal">🤝 Dayanışma</div>
+    <div class="value-pill reveal">🧠 Stratejik Düşünce</div>
+    <div class="value-pill reveal">⚡ Teknoloji Bilinci</div>
+    <div class="value-pill reveal">🏅 Sosyal Nezaket</div>
+    <div class="value-pill reveal">🔥 Liderlik</div>
+    <div class="value-pill reveal">🧭 Navigasyon</div>
+    <div class="value-pill reveal">🏕️ Kamp Kültürü</div>
+    <div class="value-pill reveal">⭐ Yıldız Gözlemi</div>
+    <div class="value-pill reveal">🍞 Yerel Gastronomi</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== SOCIAL ===== -->
+<div class="social-section">
+  <p class="section-sub reveal">Bizi Takip Edin</p>
+  <h2 class="section-title reveal" style="display:block;text-align:center">Güncel Kalın</h2>
+  <p class="reveal" style="margin-top:1rem;font-size:1rem;color:rgba(245,237,224,0.6);max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7;">
+    Yarışma duyuruları, katılım koşulları ve etkinlik haberleri için Trabzon Teknoloji Derneği'nin Instagram hesabını takip edin.
+  </p>
+  <a href="https://www.instagram.com/trabzonteknoder/" target="_blank" rel="noopener noreferrer" class="ig-link reveal">
+    <svg class="ig-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+    </svg>
+    @trabzonteknoder
+  </a>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <p>© 2026 Trabzon Teknoloji Derneği — <a href="https://www.instagram.com/trabzonteknoloji" target="_blank">Instagram</a></p>
+  <p style="margin-top:0.5rem;font-size:0.7rem;opacity:0.6;">Hayatta Kal Yarışması · 22 Haziran 2026</p>
+</footer>
+
+<script>
+// ===== STARS =====
+(function() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*70}%;
+      --d:${2+Math.random()*4}s;
+      --delay:${Math.random()*5}s;
+      --op:${0.4+Math.random()*0.6};
+    `;
+    container.appendChild(s);
+  }
+})();
+
+// ===== LEAVES =====
+(function() {
+  const container = document.getElementById('leaves');
+  const emojis = ['🍃','🍂','🌿','🍀'];
+  for (let i = 0; i < 15; i++) {
+    const l = document.createElement('div');
+    l.className = 'leaf';
+    l.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    l.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${-5}%;
+      --ls:${0.8+Math.random()*0.8}rem;
+      --ld:${6+Math.random()*8}s;
+      --ldelay:${Math.random()*10}s;
+      --lx:${(Math.random()-0.5)*200}px;
+      z-index:5;
+      position:fixed;
+    `;
+    container.appendChild(l);
+  }
+})();
+
+// ===== FIRE =====
+(function() {
+  const fire = document.getElementById('fire');
+  const colors = ['#ff4400','#ff6600','#ff8c00','#ffaa00','#ffcc00','#ff2200'];
+  function addParticle() {
+    const p = document.createElement('div');
+    p.className = 'fire-particle';
+    const size = 8 + Math.random()*18;
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    p.style.cssText = `
+      width:${size}px; height:${size*1.4}px;
+      background:${color};
+      --fd:${0.6+Math.random()*0.8}s;
+      --fdelay:${Math.random()*0.4}s;
+      --fx:${(Math.random()-0.5)*30}px;
+      opacity:${0.6+Math.random()*0.4};
+    `;
+    fire.appendChild(p);
+    setTimeout(() => p.remove(), 1400);
+  }
+  setInterval(addParticle, 60);
+})();
+
+// ===== COUNTDOWN =====
+(function() {
+  const target = new Date('2026-06-22T08:00:00+03:00').getTime();
+
+  function pad(n, len) {
+    return String(n).padStart(len,'0');
+  }
+
+  function update() {
+    const now = Date.now();
+    const diff = target - now;
+
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '000';
+      document.getElementById('cd-hours').textContent = '00';
+      document.getElementById('cd-mins').textContent = '00';
+      document.getElementById('cd-secs').textContent = '00';
+      return;
+    }
+
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+    const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+    const secs = Math.floor((diff % (1000*60)) / 1000);
+
+    const secEl = document.getElementById('cd-secs');
+    const prev = secEl.textContent;
+    const cur = pad(secs, 2);
+
+    document.getElementById('cd-days').textContent = pad(days, 3);
+    document.getElementById('cd-hours').textContent = pad(hours, 2);
+    document.getElementById('cd-mins').textContent = pad(mins, 2);
+    secEl.textContent = cur;
+
+    if (prev !== cur) {
+      secEl.classList.add('flash');
+      setTimeout(() => secEl.classList.remove('flash'), 200);
+    }
+  }
+
+  update();
+  setInterval(update, 1000);
+})();
+
+// ===== SCROLL REVEAL =====
+(function() {
+  const items = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  items.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>
