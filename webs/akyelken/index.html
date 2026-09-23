@@ -44,6 +44,43 @@
         .btn-instagram:hover { background-color: #b32656; color: white; }
         .map-box { border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #ddd; }
         .navbar { background-color: var(--main-blue) !important; }
+        .vm-card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 2.2rem 2rem;
+            height: 100%;
+            border-top: 5px solid var(--main-blue);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .vm-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.14);
+        }
+        .vm-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--main-blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin: 0 auto 1.2rem auto;
+        }
+        .vm-section-title {
+            letter-spacing: 1px;
+        }
+        .vm-section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--main-blue);
+            margin: 12px auto 0 auto;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body>
@@ -108,6 +145,40 @@
                         <i class="fas fa-calendar text-info fs-4 me-3 mt-1"></i>
                         <div><strong> <a href="https://calendar.google.com/calendar/embed?src=c_51cc23f3850b987eaf72e4229c5586c6650ed28994bf760fb729319dedddfafd%40group.calendar.google.com&ctz=Europe%2FIstanbul" target="_blank" class="text-decoration-none">Faaliyet Takvimi:</a></strong> Kulübümüzün faaliyetlerini takip etmek için takvimi inceleyin.</div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VİZYON & MİSYON -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-10 text-center mb-5">
+                <h2 class="display-6 fw-bold text-primary vm-section-title d-inline-block">Rüzgarın Peşindeki Hedeflerimiz</h2>
+                <p class="lead mt-3">Vizyonumuz ve misyonumuz, her yelken açışımızda bize yön veriyor.</p>
+            </div>
+
+            <div class="col-md-6 col-lg-5 mb-4">
+                <div class="vm-card text-center">
+                    <div class="vm-icon"><i class="fas fa-compass"></i></div>
+                    <h3 class="fw-bold text-primary mb-3">Vizyonumuz</h3>
+                    <p class="text-muted mb-0">
+                        Trabzon'u Karadeniz'in lider yelken ve su sporları merkezlerinden biri haline getirmek;
+                        ulusal ve uluslararası yarışlara ev sahipliği yapan, doğaya saygılı, disiplinli, özgüveni
+                        yüksek başarılı sporcular yetiştirerek kulübümüzü küresel yelken camiasında öncü bir
+                        marka konumuna taşımaktır.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-5 mb-4">
+                <div class="vm-card text-center">
+                    <div class="vm-icon"><i class="fas fa-anchor"></i></div>
+                    <h3 class="fw-bold text-primary mb-3">Misyonumuz</h3>
+                    <p class="text-muted mb-0">
+                        Köklü bir deniz kenti olan Trabzon'da, her yaştan insanımızı denizle ve rüzgarla
+                        buluşturarak deniz kültürünü yaygınlaştırmak; güvenli, profesyonel yelken eğitimleri
+                        ve dinamik yarışmalar düzenleyerek Karadeniz'de yelken sporunun erişilebilir ve
+                        sürdürülebilir olmasını sağlamaktır.
+                    </p>
                 </div>
             </div>
         </div>
